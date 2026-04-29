@@ -30,7 +30,7 @@ function QRCodes() {
     if (!baseUrl) return;
     const out = await Promise.all(
       tables.map(async (t) => {
-        const url = `${baseUrl}?mesa=${encodeURIComponent(t.value)}`;
+        const url = `${baseUrl}?mesa=${encodeURIComponent(t.label)}`;
         const dataUrl = await QRCode.toDataURL(url, {
           width: 600,
           margin: 2,

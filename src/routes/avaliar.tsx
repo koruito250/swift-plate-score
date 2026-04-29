@@ -13,12 +13,22 @@ export const Route = createFileRoute("/avaliar")({
     ],
   }),
   validateSearch: (s: Record<string, unknown>) => ({
-    mesa: typeof s.mesa === "string" ? s.mesa : "",
+    mesa: normalizeTableSearchParam(s.mesa),
   }),
   component: Avaliar,
 });
 
 interface Waiter { id: string; name: string }
+
+function normalizeTableSearchParam(value: unknown) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (raw === null || raw === undefined) return "";
+
+  const normalized = String(raw).trim();
+  if (!normalized) return "";
+
+  return /^\d+$/.test(normalized) ? normalized.padStart(2, "0") : normalized;
+}
 
 const FIELDS = [
   { key: "service_rating", label: "Atendimento do garçom" },
