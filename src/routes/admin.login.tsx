@@ -33,7 +33,12 @@ function AdminLogin() {
         options: { emailRedirectTo: `${window.location.origin}/admin` },
       });
       setLoading(false);
-      if (error) return toast.error(error.message);
+      if (error) {
+        if (error.message.toLowerCase().includes("weak") || error.message.toLowerCase().includes("pwned")) {
+          return toast.error("Senha muito fraca ou vazada. Use uma senha forte (ex: Sakura@2026!).");
+        }
+        return toast.error(error.message);
+      }
       toast.success("Conta criada! Você já pode entrar.");
       setMode("login");
     } else {
