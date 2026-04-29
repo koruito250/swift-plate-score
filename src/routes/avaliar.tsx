@@ -45,6 +45,9 @@ function Avaliar() {
   const [waiterId, setWaiterId] = useState<string>("");
   const [tableNumber, setTableNumber] = useState(mesa);
   const [comment, setComment] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [ratings, setRatings] = useState<Record<string, number>>({});
