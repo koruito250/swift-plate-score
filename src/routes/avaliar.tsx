@@ -41,10 +41,13 @@ function Avaliar() {
   const [now, setNow] = useState<string>("");
 
   useEffect(() => {
+    console.log("[Avaliar] mesa from URL:", mesa, "| full URL:", window.location.href);
+    if (mesa && mesa !== tableNumber) setTableNumber(mesa);
     supabase.from("waiters").select("id, name").eq("active", true).order("name")
       .then(({ data }) => setWaiters(data ?? []));
     setNow(new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mesa]);
 
   const setRating = (key: string, v: number) => setRatings((r) => ({ ...r, [key]: v }));
 
