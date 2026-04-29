@@ -38,10 +38,12 @@ function Avaliar() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [ratings, setRatings] = useState<Record<string, number>>({});
+  const [now, setNow] = useState<string>("");
 
   useEffect(() => {
     supabase.from("waiters").select("id, name").eq("active", true).order("name")
       .then(({ data }) => setWaiters(data ?? []));
+    setNow(new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
   }, []);
 
   const setRating = (key: string, v: number) => setRatings((r) => ({ ...r, [key]: v }));
@@ -101,8 +103,7 @@ function Avaliar() {
             <Link to="/" className="text-2xl font-display font-bold">鮨 Sakura</Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            {tableNumber ? `Mesa ${tableNumber}` : "Mesa —"} ·{" "}
-            {new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+            {tableNumber ? `Mesa ${tableNumber}` : "Mesa —"}{now ? ` · ${now}` : ""}
           </p>
         </div>
 
