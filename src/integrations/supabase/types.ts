@@ -14,16 +14,116 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      evaluations: {
+        Row: {
+          ambience_rating: number
+          bill_time_rating: number
+          comment: string | null
+          created_at: string
+          food_quality_rating: number
+          food_time_rating: number
+          id: string
+          overall_rating: number
+          resolved: boolean
+          service_rating: number
+          table_number: string | null
+          waiter_id: string | null
+        }
+        Insert: {
+          ambience_rating: number
+          bill_time_rating: number
+          comment?: string | null
+          created_at?: string
+          food_quality_rating: number
+          food_time_rating: number
+          id?: string
+          overall_rating: number
+          resolved?: boolean
+          service_rating: number
+          table_number?: string | null
+          waiter_id?: string | null
+        }
+        Update: {
+          ambience_rating?: number
+          bill_time_rating?: number
+          comment?: string | null
+          created_at?: string
+          food_quality_rating?: number
+          food_time_rating?: number
+          id?: string
+          overall_rating?: number
+          resolved?: boolean
+          service_rating?: number
+          table_number?: string | null
+          waiter_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluations_waiter_id_fkey"
+            columns: ["waiter_id"]
+            isOneToOne: false
+            referencedRelation: "waiters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      waiters: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +250,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
