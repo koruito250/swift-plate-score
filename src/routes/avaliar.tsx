@@ -146,14 +146,15 @@ function Avaliar() {
 
             <div>
               <label className="text-sm uppercase tracking-wider font-medium block mb-2">
-                Mesa
+                Mesa {mesa && <span className="text-xs text-primary normal-case tracking-normal italic ml-2">(detectada pelo QR Code)</span>}
               </label>
               <input
                 type="text"
                 value={tableNumber}
                 onChange={(e) => setTableNumber(e.target.value)}
                 placeholder="Ex: 12"
-                className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                readOnly={!!mesa}
+                className={`w-full bg-card border border-border px-4 py-3 text-foreground ${mesa ? "opacity-70 cursor-not-allowed" : ""}`}
               />
             </div>
 
