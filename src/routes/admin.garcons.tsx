@@ -22,9 +22,22 @@ function Garcons() {
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim()) return;
-    const { error } = await supabase.from("waiters").insert({ name: name.trim() });
-    if (error) return toast.error(error.message);
+    const trimmed = name.trim();
+    if (!trimmed) {
+      toast.error("Digite o nome do garçom");
+      return;
+    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error("Sessão expirada. Faça login novamente.");
+      return;
+    }
+    const { error } = await supabase.from("waiters").insert({ name: trimmed });
+    if (error) {
+      console.error("Erro ao adicionar garçom:", error);
+      toast.error(error.message);
+      return;
+    }
     setName("");
     toast.success("Garçom adicionado");
     load();
