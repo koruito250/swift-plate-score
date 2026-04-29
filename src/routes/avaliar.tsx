@@ -72,8 +72,22 @@ function Avaliar() {
       toast.error("Por favor, avalie todos os itens.");
       return;
     }
+    const trimmedName = customerName.trim();
+    const trimmedPhone = customerPhone.trim();
     const trimmedEmail = customerEmail.trim();
-    if (trimmedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+    if (!trimmedName) {
+      toast.error("Por favor, informe seu nome.");
+      return;
+    }
+    if (!trimmedPhone) {
+      toast.error("Por favor, informe seu telefone.");
+      return;
+    }
+    if (!trimmedEmail) {
+      toast.error("Por favor, informe seu e-mail.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       toast.error("E-mail inválido.");
       return;
     }
