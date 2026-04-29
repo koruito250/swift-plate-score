@@ -48,6 +48,15 @@ function Avaliacoes() {
     setExpandedId((prev) => (prev === id ? null : id));
   };
 
+  const toggleResolved = async (id: string, current: boolean) => {
+    const next = !current;
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, resolved: next } : r)));
+    const { error } = await supabase.from("evaluations").update({ resolved: next }).eq("id", id);
+    if (error) {
+      setRows((prev) => prev.map((r) => (r.id === id ? { ...r, resolved: current } : r)));
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       <div className="flex justify-between items-end mb-8">
