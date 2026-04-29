@@ -20,6 +20,9 @@ export type Database = {
           bill_time_rating: number
           comment: string | null
           created_at: string
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
           food_quality_rating: number
           food_time_rating: number
           id: string
@@ -34,6 +37,9 @@ export type Database = {
           bill_time_rating: number
           comment?: string | null
           created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
           food_quality_rating: number
           food_time_rating: number
           id?: string
@@ -48,6 +54,9 @@ export type Database = {
           bill_time_rating?: number
           comment?: string | null
           created_at?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
           food_quality_rating?: number
           food_time_rating?: number
           id?: string
