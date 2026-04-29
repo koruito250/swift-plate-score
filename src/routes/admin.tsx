@@ -38,6 +38,7 @@ function AdminLayout() {
     { to: "/admin", label: "Dashboard" },
     { to: "/admin/avaliacoes", label: "Avaliações" },
     { to: "/admin/garcons", label: "Garçons" },
+    { to: "/admin/qrcodes", label: "QR Codes" },
   ];
 
   return (
