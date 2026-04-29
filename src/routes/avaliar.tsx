@@ -182,6 +182,45 @@ function Avaliar() {
               />
             </div>
 
+            <div className="pt-4 border-t border-foreground/10">
+              <p className="editorial-eyebrow mb-3">Seus dados (opcional)</p>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Nome</label>
+                  <input
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    maxLength={100}
+                    placeholder="Como podemos te chamar?"
+                    className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Telefone</label>
+                  <input
+                    type="tel"
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    maxLength={30}
+                    placeholder="(11) 99999-9999"
+                    className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">E-mail</label>
+                  <input
+                    type="email"
+                    value={customerEmail}
+                    onChange={(e) => setCustomerEmail(e.target.value)}
+                    maxLength={255}
+                    placeholder="voce@email.com"
+                    className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div>
               <label className="text-sm uppercase tracking-wider font-medium block mb-2">
                 Comentário
