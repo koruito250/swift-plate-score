@@ -21,6 +21,9 @@ interface Row {
   table_number: string | null;
   created_at: string;
   resolved: boolean;
+  customer_name: string | null;
+  customer_phone: string | null;
+  customer_email: string | null;
 }
 
 function Avaliacoes() {
