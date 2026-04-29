@@ -197,42 +197,49 @@ function Avaliar() {
             </div>
 
             <div className="pt-4 border-t border-foreground/10">
-              <p className="editorial-eyebrow mb-3">Seus dados (opcional)</p>
+              <p className="editorial-eyebrow mb-1">Seus dados</p>
+              <p className="text-xs text-muted-foreground italic mb-3">
+                Obrigatório — para que possamos entrar em contato se necessário.
+              </p>
               <div className="space-y-3">
                 <div>
-                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Nome</label>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Nome *</label>
                   <input
                     type="text"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
                     maxLength={100}
+                    required
                     placeholder="Como podemos te chamar?"
                     className="w-full bg-card border border-border px-4 py-3 text-foreground"
                   />
                 </div>
                 <div>
-                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Telefone</label>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Telefone *</label>
                   <input
                     type="tel"
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
                     maxLength={30}
+                    required
                     placeholder="(11) 99999-9999"
                     className="w-full bg-card border border-border px-4 py-3 text-foreground"
                   />
                 </div>
                 <div>
-                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">E-mail</label>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">E-mail *</label>
                   <input
                     type="email"
                     value={customerEmail}
                     onChange={(e) => setCustomerEmail(e.target.value)}
                     maxLength={255}
+                    required
                     placeholder="voce@email.com"
                     className="w-full bg-card border border-border px-4 py-3 text-foreground"
                   />
                 </div>
               </div>
+            </div>
             </div>
 
             <div>
