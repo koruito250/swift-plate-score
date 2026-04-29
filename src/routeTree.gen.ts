@@ -13,6 +13,7 @@ import { Route as AvaliarRouteImport } from './routes/avaliar'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminQrcodesRouteImport } from './routes/admin.qrcodes'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminGarconsRouteImport } from './routes/admin.garcons'
 import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
@@ -35,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminQrcodesRoute = AdminQrcodesRouteImport.update({
+  id: '/qrcodes',
+  path: '/qrcodes',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qrcodes': typeof AdminQrcodesRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qrcodes': typeof AdminQrcodesRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/qrcodes': typeof AdminQrcodesRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/admin/avaliacoes'
     | '/admin/garcons'
     | '/admin/login'
+    | '/admin/qrcodes'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/admin/avaliacoes'
     | '/admin/garcons'
     | '/admin/login'
+    | '/admin/qrcodes'
     | '/admin'
   id:
     | '__root__'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/admin/avaliacoes'
     | '/admin/garcons'
     | '/admin/login'
+    | '/admin/qrcodes'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -145,6 +157,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/qrcodes': {
+      id: '/admin/qrcodes'
+      path: '/qrcodes'
+      fullPath: '/admin/qrcodes'
+      preLoaderRoute: typeof AdminQrcodesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -173,6 +192,7 @@ interface AdminRouteChildren {
   AdminAvaliacoesRoute: typeof AdminAvaliacoesRoute
   AdminGarconsRoute: typeof AdminGarconsRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminQrcodesRoute: typeof AdminQrcodesRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -180,6 +200,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAvaliacoesRoute: AdminAvaliacoesRoute,
   AdminGarconsRoute: AdminGarconsRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminQrcodesRoute: AdminQrcodesRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -193,3 +214,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
