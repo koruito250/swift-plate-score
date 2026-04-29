@@ -12,7 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AvaliarRouteImport } from './routes/avaliar'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminGarconsRouteImport } from './routes/admin.garcons'
+import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
 
 const AvaliarRoute = AvaliarRouteImport.update({
   id: '/avaliar',
@@ -29,9 +32,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGarconsRoute = AdminGarconsRouteImport.update({
+  id: '/garcons',
+  path: '/garcons',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
+  id: '/avaliacoes',
+  path: '/avaliacoes',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -39,27 +57,56 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/avaliar': typeof AvaliarRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/avaliar': typeof AvaliarRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/avaliar': typeof AvaliarRoute
+  '/admin/avaliacoes': typeof AdminAvaliacoesRoute
+  '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/avaliar' | '/admin/login'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/avaliar'
+    | '/admin/avaliacoes'
+    | '/admin/garcons'
+    | '/admin/login'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/avaliar' | '/admin/login'
-  id: '__root__' | '/' | '/admin' | '/avaliar' | '/admin/login'
+  to:
+    | '/'
+    | '/avaliar'
+    | '/admin/avaliacoes'
+    | '/admin/garcons'
+    | '/admin/login'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/avaliar'
+    | '/admin/avaliacoes'
+    | '/admin/garcons'
+    | '/admin/login'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -91,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -98,15 +152,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/garcons': {
+      id: '/admin/garcons'
+      path: '/garcons'
+      fullPath: '/admin/garcons'
+      preLoaderRoute: typeof AdminGarconsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/avaliacoes': {
+      id: '/admin/avaliacoes'
+      path: '/avaliacoes'
+      fullPath: '/admin/avaliacoes'
+      preLoaderRoute: typeof AdminAvaliacoesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAvaliacoesRoute: typeof AdminAvaliacoesRoute
+  AdminGarconsRoute: typeof AdminGarconsRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAvaliacoesRoute: AdminAvaliacoesRoute,
+  AdminGarconsRoute: AdminGarconsRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
