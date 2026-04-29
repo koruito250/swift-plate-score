@@ -48,6 +48,15 @@ function Avaliacoes() {
     setExpandedId((prev) => (prev === id ? null : id));
   };
 
+  const toggleResolved = async (id: string, current: boolean) => {
+    const next = !current;
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, resolved: next } : r)));
+    const { error } = await supabase.from("evaluations").update({ resolved: next }).eq("id", id);
+    if (error) {
+      setRows((prev) => prev.map((r) => (r.id === id ? { ...r, resolved: current } : r)));
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       <div className="flex justify-between items-end mb-8">
@@ -125,7 +134,21 @@ function Avaliacoes() {
                     <InfoCell label="Mesa" value={r.table_number ?? "—"} />
                     <InfoCell label="Garçom" value={r.waiter_id ? waiterNames.get(r.waiter_id) ?? "—" : "Sem garçom"} />
                     <InfoCell label="Data" value={new Date(r.created_at).toLocaleString("pt-BR")} />
-                    <InfoCell label="Status" value={r.resolved ? "Resolvido" : "Pendente"} />
+                    <div className="border border-border bg-background px-3 py-2">
+                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Status</p>
+                      <div className="flex items-center justify-between gap-2 mt-1">
+                        <span className={`text-sm font-medium ${r.resolved ? "text-primary" : ""}`}>
+                          {r.resolved ? "Resolvido" : "Pendente"}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleResolved(r.id, r.resolved)}
+                          className="text-[10px] uppercase tracking-wider px-2 py-1 border border-border hover:bg-foreground hover:text-background transition-colors"
+                        >
+                          {r.resolved ? "Reabrir" : "Resolver"}
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
                   <div>
