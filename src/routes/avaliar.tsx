@@ -72,6 +72,11 @@ function Avaliar() {
       toast.error("Por favor, avalie todos os itens.");
       return;
     }
+    const trimmedEmail = customerEmail.trim();
+    if (trimmedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      toast.error("E-mail inválido.");
+      return;
+    }
     setSubmitting(true);
     const payload = {
       waiter_id: waiterId || null,
@@ -83,6 +88,9 @@ function Avaliar() {
       bill_time_rating: ratings.bill_time_rating,
       overall_rating: ratings.overall_rating,
       comment: comment.trim() || null,
+      customer_name: customerName.trim().slice(0, 100) || null,
+      customer_phone: customerPhone.trim().slice(0, 30) || null,
+      customer_email: trimmedEmail.slice(0, 255) || null,
     };
     const { error } = await supabase.from("evaluations").insert(payload);
     setSubmitting(false);
