@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Pencil, Check, X } from "lucide-react";
 
 export const Route = createFileRoute("/admin/garcons")({
   component: Garcons,
@@ -13,6 +13,34 @@ interface Waiter { id: string; name: string; active: boolean }
 function Garcons() {
   const [waiters, setWaiters] = useState<Waiter[]>([]);
   const [name, setName] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState("");
+
+  function startEdit(w: Waiter) {
+    setEditingId(w.id);
+    setEditingName(w.name);
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditingName("");
+  }
+
+  async function saveEdit(id: string) {
+    const trimmed = editingName.trim();
+    if (!trimmed) {
+      toast.error("Nome não pode ficar vazio");
+      return;
+    }
+    const { error } = await supabase.from("waiters").update({ name: trimmed }).eq("id", id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Garçom atualizado");
+    cancelEdit();
+    load();
+  }
 
   async function load() {
     const { data } = await supabase.from("waiters").select("*").order("name");
@@ -75,20 +103,50 @@ function Garcons() {
       <div className="border border-border bg-card divide-y divide-border">
         {waiters.length === 0 && <p className="p-6 text-center text-muted-foreground italic">Nenhum garçom cadastrado.</p>}
         {waiters.map((w) => (
-          <div key={w.id} className="flex items-center justify-between px-5 py-4">
-            <div>
-              <p className="font-semibold text-lg">{w.name}</p>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                {w.active ? "Ativo" : "Inativo"}
-              </p>
-            </div>
+          <div key={w.id} className="flex items-center justify-between px-5 py-4 gap-3">
+            {editingId === w.id ? (
+              <input
+                autoFocus
+                value={editingName}
+                onChange={(e) => setEditingName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") saveEdit(w.id);
+                  if (e.key === "Escape") cancelEdit();
+                }}
+                maxLength={80}
+                className="flex-1 bg-background border border-border px-3 py-2 text-lg font-semibold"
+              />
+            ) : (
+              <div className="flex-1">
+                <p className="font-semibold text-lg">{w.name}</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {w.active ? "Ativo" : "Inativo"}
+                </p>
+              </div>
+            )}
             <div className="flex items-center gap-2">
-              <button onClick={() => toggle(w)} className="px-3 py-1 text-xs uppercase tracking-wider border border-border hover:border-foreground">
-                {w.active ? "Desativar" : "Ativar"}
-              </button>
-              <button onClick={() => remove(w.id)} className="p-2 text-muted-foreground hover:text-primary">
-                <Trash2 className="h-4 w-4" />
-              </button>
+              {editingId === w.id ? (
+                <>
+                  <button onClick={() => saveEdit(w.id)} className="p-2 text-foreground hover:text-primary" title="Salvar">
+                    <Check className="h-4 w-4" />
+                  </button>
+                  <button onClick={cancelEdit} className="p-2 text-muted-foreground hover:text-foreground" title="Cancelar">
+                    <X className="h-4 w-4" />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => toggle(w)} className="px-3 py-1 text-xs uppercase tracking-wider border border-border hover:border-foreground">
+                    {w.active ? "Desativar" : "Ativar"}
+                  </button>
+                  <button onClick={() => startEdit(w)} className="p-2 text-muted-foreground hover:text-foreground" title="Editar">
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                  <button onClick={() => remove(w.id)} className="p-2 text-muted-foreground hover:text-primary" title="Remover">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ))}
