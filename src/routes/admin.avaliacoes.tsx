@@ -149,6 +149,7 @@ function Avaliacoes() {
                         </button>
                       </div>
                     </div>
+                  </div>
 
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Dados do cliente</p>
