@@ -240,7 +240,6 @@ function Avaliar() {
                 </div>
               </div>
             </div>
-            </div>
 
             <div>
               <label className="text-sm uppercase tracking-wider font-medium block mb-2">
