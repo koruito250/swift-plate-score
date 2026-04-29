@@ -119,10 +119,9 @@ function QRCodes() {
           <div ref={printRef} className="print-area grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {items.map((it) => (
               <div key={it.label} className="print-card border border-foreground/20 bg-card p-5 text-center">
-                <p className="editorial-eyebrow mb-1">Sakura</p>
                 <p className="font-display text-3xl font-bold mb-3">Mesa {it.label}</p>
                 <img src={it.dataUrl} alt={`QR mesa ${it.label}`} className="w-full h-auto" />
-                <p className="text-[10px] text-muted-foreground mt-3 italic">
+                <p className="text-sm mt-3 italic">
                   Aponte a câmera para avaliar
                 </p>
                 <button
