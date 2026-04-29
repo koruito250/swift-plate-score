@@ -102,9 +102,9 @@ function Avaliar() {
       bill_time_rating: ratings.bill_time_rating,
       overall_rating: ratings.overall_rating,
       comment: comment.trim() || null,
-      customer_name: customerName.trim().slice(0, 100) || null,
-      customer_phone: customerPhone.trim().slice(0, 30) || null,
-      customer_email: trimmedEmail.slice(0, 255) || null,
+      customer_name: trimmedName.slice(0, 100),
+      customer_phone: trimmedPhone.slice(0, 30),
+      customer_email: trimmedEmail.slice(0, 255),
     };
     const { error } = await supabase.from("evaluations").insert(payload);
     setSubmitting(false);
