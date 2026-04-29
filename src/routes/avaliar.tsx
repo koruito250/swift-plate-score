@@ -1,0 +1,185 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { StarRating } from "@/components/StarRating";
+import { toast } from "sonner";
+import { Check } from "lucide-react";
+
+export const Route = createFileRoute("/avaliar")({
+  head: () => ({
+    meta: [
+      { title: "Avalie sua experiência — Sakura" },
+      { name: "description", content: "Conte como foi sua experiência. Sua opinião molda nossa cozinha." },
+    ],
+  }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    mesa: typeof s.mesa === "string" ? s.mesa : "",
+  }),
+  component: Avaliar,
+});
+
+interface Waiter { id: string; name: string }
+
+const FIELDS = [
+  { key: "service_rating", label: "Atendimento do garçom" },
+  { key: "food_time_rating", label: "Tempo dos pratos" },
+  { key: "food_quality_rating", label: "Qualidade da comida" },
+  { key: "ambience_rating", label: "Ambiente" },
+  { key: "bill_time_rating", label: "Tempo da conta" },
+  { key: "overall_rating", label: "Nota geral" },
+] as const;
+
+function Avaliar() {
+  const { mesa } = Route.useSearch();
+  const [waiters, setWaiters] = useState<Waiter[]>([]);
+  const [waiterId, setWaiterId] = useState<string>("");
+  const [tableNumber, setTableNumber] = useState(mesa);
+  const [comment, setComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [ratings, setRatings] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    supabase.from("waiters").select("id, name").eq("active", true).order("name")
+      .then(({ data }) => setWaiters(data ?? []));
+  }, []);
+
+  const setRating = (key: string, v: number) => setRatings((r) => ({ ...r, [key]: v }));
+
+  const allRated = FIELDS.every((f) => ratings[f.key] > 0);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!allRated) {
+      toast.error("Por favor, avalie todos os itens.");
+      return;
+    }
+    setSubmitting(true);
+    const payload = {
+      waiter_id: waiterId || null,
+      table_number: tableNumber || null,
+      service_rating: ratings.service_rating,
+      food_time_rating: ratings.food_time_rating,
+      food_quality_rating: ratings.food_quality_rating,
+      ambience_rating: ratings.ambience_rating,
+      bill_time_rating: ratings.bill_time_rating,
+      overall_rating: ratings.overall_rating,
+      comment: comment.trim() || null,
+    };
+    const { error } = await supabase.from("evaluations").insert(payload);
+    setSubmitting(false);
+    if (error) {
+      toast.error("Não foi possível enviar. Tente novamente.");
+      return;
+    }
+    setSubmitted(true);
+  }
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <div className="max-w-md text-center">
+          <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-6">
+            <Check className="h-8 w-8" strokeWidth={3} />
+          </div>
+          <p className="editorial-eyebrow mb-4">Recebido</p>
+          <h1 className="text-4xl font-display font-bold mb-4">Obrigado.</h1>
+          <p className="text-muted-foreground italic">
+            Sua palavra molda nossa cozinha. Volte sempre.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="max-w-2xl mx-auto px-6 py-10">
+        <div className="editorial-rule pb-4 mb-8 flex justify-between items-end">
+          <div>
+            <p className="editorial-eyebrow">Avaliação</p>
+            <Link to="/" className="text-2xl font-display font-bold">鮨 Sakura</Link>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {tableNumber ? `Mesa ${tableNumber}` : "Mesa —"} ·{" "}
+            {new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+          </p>
+        </div>
+
+        <h1 className="text-5xl font-display font-bold leading-tight mb-3">
+          Como foi <em className="text-primary">tudo</em>?
+        </h1>
+        <p className="text-muted-foreground mb-10 italic">
+          Sua palavra molda nossa cozinha.
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-7">
+          {FIELDS.map((f) => (
+            <div key={f.key}>
+              <div className="flex justify-between items-baseline mb-2">
+                <p className="text-sm uppercase tracking-wider font-medium">{f.label}</p>
+                <p className="text-xs text-muted-foreground">
+                  {ratings[f.key] ? `${ratings[f.key]}/5` : "Toque"}
+                </p>
+              </div>
+              <StarRating value={ratings[f.key] ?? 0} onChange={(v) => setRating(f.key, v)} />
+            </div>
+          ))}
+
+          <div className="space-y-3 pt-4 border-t border-foreground/15">
+            <div>
+              <label className="text-sm uppercase tracking-wider font-medium block mb-2">
+                Garçom
+              </label>
+              <select
+                value={waiterId}
+                onChange={(e) => setWaiterId(e.target.value)}
+                className="w-full bg-card border border-border px-4 py-3 text-foreground"
+              >
+                <option value="">— Selecione —</option>
+                {waiters.map((w) => (
+                  <option key={w.id} value={w.id}>{w.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-sm uppercase tracking-wider font-medium block mb-2">
+                Mesa
+              </label>
+              <input
+                type="text"
+                value={tableNumber}
+                onChange={(e) => setTableNumber(e.target.value)}
+                placeholder="Ex: 12"
+                className="w-full bg-card border border-border px-4 py-3 text-foreground"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm uppercase tracking-wider font-medium block mb-2">
+                Comentário
+              </label>
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                rows={4}
+                maxLength={1000}
+                placeholder="Conte mais sobre sua experiência…"
+                className="w-full bg-card border border-border px-4 py-3 text-foreground resize-none"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting || !allRated}
+            className="w-full py-5 bg-foreground text-background font-bold uppercase tracking-[0.25em] text-sm hover:bg-primary transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {submitting ? "Enviando…" : "Enviar avaliação →"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
