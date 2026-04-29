@@ -46,6 +46,7 @@ function Landing() {
           </p>
           <Link
             to="/avaliar"
+            search={{ mesa: "" }}
             className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground uppercase tracking-[0.2em] text-xs font-semibold hover:bg-foreground transition-colors"
           >
             Demonstração <ArrowRight className="h-4 w-4" />
