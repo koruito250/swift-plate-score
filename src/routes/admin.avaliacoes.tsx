@@ -21,6 +21,9 @@ interface Row {
   table_number: string | null;
   created_at: string;
   resolved: boolean;
+  customer_name: string | null;
+  customer_phone: string | null;
+  customer_email: string | null;
 }
 
 function Avaliacoes() {
@@ -123,6 +126,15 @@ function Avaliacoes() {
                     <InfoCell label="Garçom" value={r.waiter_id ? waiterNames.get(r.waiter_id) ?? "—" : "Sem garçom"} />
                     <InfoCell label="Data" value={new Date(r.created_at).toLocaleString("pt-BR")} />
                     <InfoCell label="Status" value={r.resolved ? "Resolvido" : "Pendente"} />
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Dados do cliente</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                      <InfoCell label="Nome" value={r.customer_name ?? "—"} />
+                      <InfoCell label="Telefone" value={r.customer_phone ?? "—"} />
+                      <InfoCell label="E-mail" value={r.customer_email ?? "—"} />
+                    </div>
                   </div>
                 </div>
               )}

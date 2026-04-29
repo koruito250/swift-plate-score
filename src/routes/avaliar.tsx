@@ -45,6 +45,9 @@ function Avaliar() {
   const [waiterId, setWaiterId] = useState<string>("");
   const [tableNumber, setTableNumber] = useState(mesa);
   const [comment, setComment] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [ratings, setRatings] = useState<Record<string, number>>({});
@@ -69,6 +72,11 @@ function Avaliar() {
       toast.error("Por favor, avalie todos os itens.");
       return;
     }
+    const trimmedEmail = customerEmail.trim();
+    if (trimmedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      toast.error("E-mail inválido.");
+      return;
+    }
     setSubmitting(true);
     const payload = {
       waiter_id: waiterId || null,
@@ -80,6 +88,9 @@ function Avaliar() {
       bill_time_rating: ratings.bill_time_rating,
       overall_rating: ratings.overall_rating,
       comment: comment.trim() || null,
+      customer_name: customerName.trim().slice(0, 100) || null,
+      customer_phone: customerPhone.trim().slice(0, 30) || null,
+      customer_email: trimmedEmail.slice(0, 255) || null,
     };
     const { error } = await supabase.from("evaluations").insert(payload);
     setSubmitting(false);
@@ -169,6 +180,45 @@ function Avaliar() {
                 readOnly={!!mesa}
                 className={`w-full bg-card border border-border px-4 py-3 text-foreground ${mesa ? "opacity-70 cursor-not-allowed" : ""}`}
               />
+            </div>
+
+            <div className="pt-4 border-t border-foreground/10">
+              <p className="editorial-eyebrow mb-3">Seus dados (opcional)</p>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Nome</label>
+                  <input
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    maxLength={100}
+                    placeholder="Como podemos te chamar?"
+                    className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Telefone</label>
+                  <input
+                    type="tel"
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    maxLength={30}
+                    placeholder="(11) 99999-9999"
+                    className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">E-mail</label>
+                  <input
+                    type="email"
+                    value={customerEmail}
+                    onChange={(e) => setCustomerEmail(e.target.value)}
+                    maxLength={255}
+                    placeholder="voce@email.com"
+                    className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                  />
+                </div>
+              </div>
             </div>
 
             <div>
