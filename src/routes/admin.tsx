@@ -10,9 +10,14 @@ export const Route = createFileRoute("/admin")({
 function AdminLayout() {
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const isLoginRoute = path === "/admin/login";
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    if (isLoginRoute) {
+      setReady(true);
+      return;
+    }
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) navigate({ to: "/admin/login" });
     });
@@ -24,7 +29,11 @@ function AdminLayout() {
       }
     });
     return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, isLoginRoute]);
+
+  if (isLoginRoute) {
+    return <Outlet />;
+  }
 
   if (!ready) {
     return (
