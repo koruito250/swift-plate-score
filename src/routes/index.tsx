@@ -20,7 +20,7 @@ function Landing() {
             <span className="text-2xl font-display font-bold">鮨 Sakura</span>
           </div>
           <nav className="flex items-center gap-3 text-sm">
-            <Link to="/avaliar" className="hover:text-primary transition-colors">Avaliar</Link>
+            <Link to="/avaliar" search={{ mesa: "" }} className="hover:text-primary transition-colors">Avaliar</Link>
             <Link
               to="/admin/login"
               className="px-4 py-2 bg-foreground text-background uppercase tracking-[0.2em] text-xs font-medium hover:bg-primary transition-colors"
