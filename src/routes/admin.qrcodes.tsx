@@ -11,8 +11,7 @@ function QRCodes() {
   const [baseUrl, setBaseUrl] = useState("");
   const [start, setStart] = useState(1);
   const [end, setEnd] = useState(10);
-  const [prefix, setPrefix] = useState("");
-  const [items, setItems] = useState<{ label: string; url: string; dataUrl: string }[]>([]);
+  const [items, setItems] = useState<{ label: string; value: string; url: string; dataUrl: string }[]>([]);
   const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,20 +20,23 @@ function QRCodes() {
 
   const tables = useMemo(() => {
     if (end < start) return [];
-    return Array.from({ length: end - start + 1 }, (_, i) => `${prefix}${start + i}`);
-  }, [start, end, prefix]);
+    return Array.from({ length: end - start + 1 }, (_, i) => {
+      const n = start + i;
+      return { value: String(n), label: String(n).padStart(2, "0") };
+    });
+  }, [start, end]);
 
   async function generate() {
     if (!baseUrl) return;
     const out = await Promise.all(
       tables.map(async (t) => {
-        const url = `${baseUrl}?mesa=${encodeURIComponent(t)}`;
+        const url = `${baseUrl}?mesa=${encodeURIComponent(t.value)}`;
         const dataUrl = await QRCode.toDataURL(url, {
           width: 600,
           margin: 2,
           color: { dark: "#1a1a1a", light: "#fafaf7" },
         });
-        return { label: t, url, dataUrl };
+        return { label: t.label, value: t.value, url, dataUrl };
       })
     );
     setItems(out);
@@ -71,17 +73,7 @@ function QRCodes() {
         </p>
       </div>
 
-      <section className="no-print border border-border bg-card p-6 grid sm:grid-cols-4 gap-4">
-        <div>
-          <label className="text-xs uppercase tracking-wider font-medium block mb-2">Prefixo</label>
-          <input
-            type="text"
-            value={prefix}
-            onChange={(e) => setPrefix(e.target.value)}
-            placeholder="ex: A"
-            className="w-full bg-background border border-border px-3 py-2"
-          />
-        </div>
+      <section className="no-print border border-border bg-card p-6 grid sm:grid-cols-3 gap-4">
         <div>
           <label className="text-xs uppercase tracking-wider font-medium block mb-2">Mesa inicial</label>
           <input
