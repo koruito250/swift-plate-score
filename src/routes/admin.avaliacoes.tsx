@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { StarRating } from "@/components/StarRating";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, FileDown } from "lucide-react";
+import jsPDF from "jspdf";
 
 export const Route = createFileRoute("/admin/avaliacoes")({
   component: Avaliacoes,
