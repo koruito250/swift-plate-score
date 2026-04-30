@@ -58,6 +58,74 @@ function Avaliacoes() {
     }
   };
 
+  const exportPDF = (r: Row) => {
+    const doc = new jsPDF({ unit: "pt", format: "a4" });
+    const waiterName = r.waiter_id ? waiterNames.get(r.waiter_id) ?? "—" : "Sem garçom";
+    const margin = 48;
+    let y = margin;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("Relatório de Avaliação", margin, y);
+    y += 24;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.text(`Gerado em ${new Date().toLocaleString("pt-BR")}`, margin, y);
+    y += 24;
+    doc.setTextColor(0);
+
+    const section = (title: string) => {
+      y += 6;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.text(title, margin, y);
+      y += 6;
+      doc.setDrawColor(200);
+      doc.line(margin, y, 547, y);
+      y += 14;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+    };
+
+    const line = (label: string, value: string) => {
+      doc.setFont("helvetica", "bold");
+      doc.text(`${label}:`, margin, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(value, margin + 140, y);
+      y += 16;
+    };
+
+    section("Informações gerais");
+    line("Mesa", r.table_number ?? "—");
+    line("Garçom", waiterName);
+    line("Data", new Date(r.created_at).toLocaleString("pt-BR"));
+    line("Status", r.resolved ? "Resolvido" : "Pendente");
+
+    section("Dados do cliente");
+    line("Nome", r.customer_name ?? "—");
+    line("Telefone", r.customer_phone ?? "—");
+    line("E-mail", r.customer_email ?? "—");
+
+    section("Notas");
+    line("Avaliação geral", `${r.overall_rating}/5`);
+    line("Atendimento", `${r.service_rating}/5`);
+    line("Tempo da comida", `${r.food_time_rating}/5`);
+    line("Qualidade da comida", `${r.food_quality_rating}/5`);
+    line("Ambiente", `${r.ambience_rating}/5`);
+    line("Tempo da conta", `${r.bill_time_rating}/5`);
+
+    section("Comentário");
+    const comment = r.comment ?? "Cliente não deixou comentário.";
+    const wrapped = doc.splitTextToSize(comment, 499);
+    doc.text(wrapped, margin, y);
+
+    const fileName = `avaliacao-mesa-${r.table_number ?? "sn"}-${r.id.slice(0, 8)}.pdf`;
+    doc.save(fileName);
+  };
+
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       <div className="flex justify-between items-end mb-8">
