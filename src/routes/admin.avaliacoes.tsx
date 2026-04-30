@@ -251,6 +251,30 @@ function Avaliacoes() {
                     </div>
                   </div>
 
+                  <div className="border-2 border-primary bg-primary/5 px-4 py-3">
+                    <div className="flex items-center justify-between gap-3 flex-wrap">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-primary font-bold">Desconto de 5%</p>
+                        <p className="text-sm font-medium mt-1">
+                          {r.discount_used
+                            ? "✓ Desconto já utilizado"
+                            : "Cliente possui 5% de desconto na próxima visita"}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggleDiscount(r.id, r.discount_used)}
+                        className={`text-[10px] uppercase tracking-wider px-3 py-2 border transition-colors ${
+                          r.discount_used
+                            ? "border-border hover:bg-foreground hover:text-background"
+                            : "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
+                        }`}
+                      >
+                        {r.discount_used ? "Marcar como disponível" : "Marcar como utilizado"}
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="flex flex-wrap justify-end gap-2 pt-2">
                     <button
                       type="button"
