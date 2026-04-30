@@ -135,6 +135,12 @@ function Avaliar() {
             <p className="text-xs text-muted-foreground italic mt-2">
               Apresente esta tela ou informe seu nome ao garçom na próxima vinda.
             </p>
+            <div className="mt-4 pt-3 border-t border-primary/30 flex justify-between items-center text-xs">
+              <span className="editorial-eyebrow text-foreground/70">Emitido em</span>
+              <span className="font-mono font-semibold text-foreground">
+                {new Date().toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+              </span>
+            </div>
           </div>
         </div>
       </div>
