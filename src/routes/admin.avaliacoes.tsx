@@ -58,6 +58,18 @@ function Avaliacoes() {
     }
   };
 
+  const deleteEvaluation = async (id: string) => {
+    if (!confirm("Tem certeza que deseja excluir esta avaliação? Esta ação não pode ser desfeita.")) return;
+    const prev = rows;
+    setRows((p) => p.filter((r) => r.id !== id));
+    if (expandedId === id) setExpandedId(null);
+    const { error } = await supabase.from("evaluations").delete().eq("id", id);
+    if (error) {
+      setRows(prev);
+      alert("Erro ao excluir avaliação.");
+    }
+  };
+
   const exportPDF = (r: Row) => {
     const doc = new jsPDF({ unit: "pt", format: "a4" });
     const waiterName = r.waiter_id ? waiterNames.get(r.waiter_id) ?? "—" : "Sem garçom";
