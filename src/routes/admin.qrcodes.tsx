@@ -15,8 +15,25 @@ function QRCodes() {
   const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setBaseUrl(`${window.location.origin}/avaliar`);
+    const host = window.location.hostname;
+    // Detecta ambientes do editor/preview do Lovable (que exigem login)
+    // e sugere a URL pública estável do projeto publicado.
+    const isLovableEditor =
+      host.includes("lovable.dev") ||
+      host.includes("lovableproject.com") ||
+      host.startsWith("id-preview--");
+
+    const publicUrl = "https://project--fccaebc3-d59a-4c38-8947-4c97be5b8298.lovable.app/avaliar";
+    const defaultUrl = isLovableEditor ? publicUrl : `${window.location.origin}/avaliar`;
+
+    // Persiste escolha do admin
+    const saved = typeof window !== "undefined" ? window.localStorage.getItem("qr_base_url") : null;
+    setBaseUrl(saved || defaultUrl);
   }, []);
+
+  useEffect(() => {
+    if (baseUrl) window.localStorage.setItem("qr_base_url", baseUrl);
+  }, [baseUrl]);
 
   const tables = useMemo(() => {
     if (end < start) return [];
@@ -73,34 +90,52 @@ function QRCodes() {
         </p>
       </div>
 
-      <section className="no-print border border-border bg-card p-6 grid sm:grid-cols-3 gap-4">
+      <section className="no-print border border-border bg-card p-6 space-y-4">
         <div>
-          <label className="text-xs uppercase tracking-wider font-medium block mb-2">Mesa inicial</label>
+          <label className="text-xs uppercase tracking-wider font-medium block mb-2">
+            URL pública de avaliação
+          </label>
           <input
-            type="number"
-            value={start}
-            min={1}
-            onChange={(e) => setStart(Number(e.target.value))}
-            className="w-full bg-background border border-border px-3 py-2"
+            type="url"
+            value={baseUrl}
+            onChange={(e) => setBaseUrl(e.target.value)}
+            placeholder="https://seusite.com/avaliar"
+            className="w-full bg-background border border-border px-3 py-2 font-mono text-sm"
           />
+          <p className="text-xs text-muted-foreground italic mt-2">
+            Use a URL <strong>publicada</strong> do site (ex: <code>seudominio.com.br/avaliar</code>).
+            Não use a URL do editor — ela exige login do Lovable.
+          </p>
         </div>
-        <div>
-          <label className="text-xs uppercase tracking-wider font-medium block mb-2">Mesa final</label>
-          <input
-            type="number"
-            value={end}
-            min={start}
-            onChange={(e) => setEnd(Number(e.target.value))}
-            className="w-full bg-background border border-border px-3 py-2"
-          />
-        </div>
-        <div className="flex items-end">
-          <button
-            onClick={generate}
-            className="w-full py-2 bg-foreground text-background font-bold uppercase tracking-[0.2em] text-xs hover:bg-primary transition-colors"
-          >
-            Gerar {tables.length} QR{tables.length === 1 ? "" : "s"}
-          </button>
+        <div className="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label className="text-xs uppercase tracking-wider font-medium block mb-2">Mesa inicial</label>
+            <input
+              type="number"
+              value={start}
+              min={1}
+              onChange={(e) => setStart(Number(e.target.value))}
+              className="w-full bg-background border border-border px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="text-xs uppercase tracking-wider font-medium block mb-2">Mesa final</label>
+            <input
+              type="number"
+              value={end}
+              min={start}
+              onChange={(e) => setEnd(Number(e.target.value))}
+              className="w-full bg-background border border-border px-3 py-2"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={generate}
+              className="w-full py-2 bg-foreground text-background font-bold uppercase tracking-[0.2em] text-xs hover:bg-primary transition-colors"
+            >
+              Gerar {tables.length} QR{tables.length === 1 ? "" : "s"}
+            </button>
+          </div>
         </div>
       </section>
 
