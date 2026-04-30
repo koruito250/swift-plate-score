@@ -125,7 +125,7 @@ function Avaliar() {
           <p className="editorial-eyebrow mb-4">Recebido</p>
           <h1 className="text-4xl font-display font-bold mb-4">Obrigado.</h1>
           <p className="text-muted-foreground italic">
-            Sua palavra molda nossa cozinha. Volte sempre.
+            Sua opinião é essencial para mantermos o padrão de excelência.
           </p>
         </div>
       </div>
@@ -149,7 +149,7 @@ function Avaliar() {
           Como foi <em className="text-primary">tudo</em>?
         </h1>
         <p className="text-muted-foreground mb-10 italic">
-          Sua palavra molda nossa cozinha.
+          Avalie sua experiência e ganhe benefícios.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-7">
