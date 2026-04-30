@@ -23,12 +23,18 @@ function QRCodes() {
       host.includes("lovableproject.com") ||
       host.startsWith("id-preview--");
 
-    const publicUrl = "https://project--fccaebc3-d59a-4c38-8947-4c97be5b8298.lovable.app/avaliar";
+    const publicUrl = "https://swift-plate-score.lovable.app/avaliar";
     const defaultUrl = isLovableEditor ? publicUrl : `${window.location.origin}/avaliar`;
 
-    // Persiste escolha do admin
+    // Persiste escolha do admin — mas ignora valores antigos do editor
     const saved = typeof window !== "undefined" ? window.localStorage.getItem("qr_base_url") : null;
-    setBaseUrl(saved || defaultUrl);
+    const savedIsBad =
+      saved &&
+      (saved.includes("lovable.dev") ||
+        saved.includes("lovableproject.com") ||
+        saved.includes("id-preview--") ||
+        saved.includes("project--fccaebc3"));
+    setBaseUrl(savedIsBad || !saved ? defaultUrl : saved);
   }, []);
 
   useEffect(() => {
