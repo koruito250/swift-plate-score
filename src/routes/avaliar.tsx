@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { StarRating } from "@/components/StarRating";
 import { toast } from "sonner";
-import { Check } from "lucide-react";
+import { Check, Download } from "lucide-react";
+import { toPng } from "html-to-image";
 
 export const Route = createFileRoute("/avaliar")({
   head: () => ({
