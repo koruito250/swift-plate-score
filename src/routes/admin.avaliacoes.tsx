@@ -124,6 +124,7 @@ function Avaliacoes() {
     line("Garçom", waiterName);
     line("Data", new Date(r.created_at).toLocaleString("pt-BR"));
     line("Status", r.resolved ? "Resolvido" : "Pendente");
+    line("Desconto 5%", r.discount_used ? "Utilizado" : "Disponível");
 
     section("Dados do cliente");
     line("Nome", r.customer_name ?? "—");
