@@ -25,6 +25,7 @@ interface Row {
   customer_name: string | null;
   customer_phone: string | null;
   customer_email: string | null;
+  discount_used: boolean;
 }
 
 function Avaliacoes() {
