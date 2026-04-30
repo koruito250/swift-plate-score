@@ -1,0 +1,1 @@
+ALTER TABLE public.evaluations ADD COLUMN discount_used boolean NOT NULL DEFAULT false;
