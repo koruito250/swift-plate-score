@@ -228,6 +228,17 @@ function Avaliacoes() {
                       <InfoCell label="E-mail" value={r.customer_email ?? "—"} />
                     </div>
                   </div>
+
+                  <div className="flex justify-end pt-2">
+                    <button
+                      type="button"
+                      onClick={() => exportPDF(r)}
+                      className="inline-flex items-center gap-2 text-xs uppercase tracking-wider px-4 py-2 bg-foreground text-background hover:bg-foreground/90 transition-colors"
+                    >
+                      <FileDown className="w-4 h-4" />
+                      Exportar relatório em PDF
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
