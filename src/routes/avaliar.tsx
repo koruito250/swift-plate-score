@@ -150,11 +150,16 @@ function Avaliar() {
           </p>
           <div ref={couponRef} className="border-2 border-primary bg-primary/5 px-6 py-5">
             <p className="editorial-eyebrow text-primary mb-2">Recompensa</p>
+            {customerName.trim() && (
+              <p className="text-sm font-medium mb-2">
+                Cliente: <span className="text-primary font-bold">{customerName.trim()}</span>
+              </p>
+            )}
             <p className="text-lg font-display font-bold leading-snug">
               🎉 Parabéns! Você ganhou <span className="text-primary">5% de desconto</span> na sua próxima visita.
             </p>
             <p className="text-xs text-muted-foreground italic mt-2">
-              Apresente esta tela ou informe seu nome ao garçom na próxima vinda.
+              Apresente esta tela ao garçom na próxima vinda.
             </p>
             <div className="mt-4 pt-3 border-t border-primary/30 flex justify-between items-center text-xs">
               <span className="editorial-eyebrow text-foreground/70">Emitido em</span>
