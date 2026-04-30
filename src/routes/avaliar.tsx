@@ -124,9 +124,18 @@ function Avaliar() {
           </div>
           <p className="editorial-eyebrow mb-4">Recebido</p>
           <h1 className="text-4xl font-display font-bold mb-4">Obrigado.</h1>
-          <p className="text-muted-foreground italic">
+          <p className="text-muted-foreground italic mb-6">
             Sua opinião é essencial para mantermos o padrão de excelência.
           </p>
+          <div className="border-2 border-primary bg-primary/5 px-6 py-5">
+            <p className="editorial-eyebrow text-primary mb-2">Recompensa</p>
+            <p className="text-lg font-display font-bold leading-snug">
+              🎉 Parabéns! Você ganhou <span className="text-primary">5% de desconto</span> na sua próxima visita.
+            </p>
+            <p className="text-xs text-muted-foreground italic mt-2">
+              Apresente esta tela ou informe seu nome ao garçom na próxima vinda.
+            </p>
+          </div>
         </div>
       </div>
     );
