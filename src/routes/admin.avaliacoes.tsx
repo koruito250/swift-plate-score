@@ -59,6 +59,15 @@ function Avaliacoes() {
     }
   };
 
+  const toggleDiscount = async (id: string, current: boolean) => {
+    const next = !current;
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, discount_used: next } : r)));
+    const { error } = await supabase.from("evaluations").update({ discount_used: next }).eq("id", id);
+    if (error) {
+      setRows((prev) => prev.map((r) => (r.id === id ? { ...r, discount_used: current } : r)));
+    }
+  };
+
   const deleteEvaluation = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir esta avaliação? Esta ação não pode ser desfeita.")) return;
     const prev = rows;
