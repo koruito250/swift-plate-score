@@ -53,6 +53,26 @@ function Avaliar() {
   const [submitted, setSubmitted] = useState(false);
   const [ratings, setRatings] = useState<Record<string, number>>({});
   const [now, setNow] = useState<string>("");
+  const couponRef = useRef<HTMLDivElement>(null);
+
+  async function downloadCoupon() {
+    if (!couponRef.current) return;
+    try {
+      const dataUrl = await toPng(couponRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: "#ffffff",
+      });
+      const link = document.createElement("a");
+      link.download = `cupom-sakura-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+      toast.success("Cupom salvo!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Não foi possível baixar o cupom.");
+    }
+  }
 
   useEffect(() => {
     console.log("[Avaliar] mesa from URL:", mesa, "| full URL:", window.location.href);
