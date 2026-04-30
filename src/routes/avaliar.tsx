@@ -148,7 +148,7 @@ function Avaliar() {
           <p className="text-muted-foreground italic mb-6">
             Sua opinião é essencial para mantermos o padrão de excelência.
           </p>
-          <div className="border-2 border-primary bg-primary/5 px-6 py-5">
+          <div ref={couponRef} className="border-2 border-primary bg-primary/5 px-6 py-5">
             <p className="editorial-eyebrow text-primary mb-2">Recompensa</p>
             <p className="text-lg font-display font-bold leading-snug">
               🎉 Parabéns! Você ganhou <span className="text-primary">5% de desconto</span> na sua próxima visita.
@@ -163,6 +163,14 @@ function Avaliar() {
               </span>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={downloadCoupon}
+            className="mt-4 inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-3 font-medium hover:opacity-90 transition w-full justify-center"
+          >
+            <Download className="h-4 w-4" />
+            Baixar cupom
+          </button>
         </div>
       </div>
     );
