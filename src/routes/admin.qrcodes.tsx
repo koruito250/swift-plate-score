@@ -15,8 +15,25 @@ function QRCodes() {
   const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setBaseUrl(`${window.location.origin}/avaliar`);
+    const host = window.location.hostname;
+    // Detecta ambientes do editor/preview do Lovable (que exigem login)
+    // e sugere a URL pública estável do projeto publicado.
+    const isLovableEditor =
+      host.includes("lovable.dev") ||
+      host.includes("lovableproject.com") ||
+      host.startsWith("id-preview--");
+
+    const publicUrl = "https://project--fccaebc3-d59a-4c38-8947-4c97be5b8298.lovable.app/avaliar";
+    const defaultUrl = isLovableEditor ? publicUrl : `${window.location.origin}/avaliar`;
+
+    // Persiste escolha do admin
+    const saved = typeof window !== "undefined" ? window.localStorage.getItem("qr_base_url") : null;
+    setBaseUrl(saved || defaultUrl);
   }, []);
+
+  useEffect(() => {
+    if (baseUrl) window.localStorage.setItem("qr_base_url", baseUrl);
+  }, [baseUrl]);
 
   const tables = useMemo(() => {
     if (end < start) return [];
