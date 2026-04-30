@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { StarRating } from "@/components/StarRating";
-import { ChevronDown, ChevronUp, FileDown } from "lucide-react";
+import { ChevronDown, ChevronUp, FileDown, Trash2 } from "lucide-react";
 import jsPDF from "jspdf";
 
 export const Route = createFileRoute("/admin/avaliacoes")({
@@ -55,6 +55,18 @@ function Avaliacoes() {
     const { error } = await supabase.from("evaluations").update({ resolved: next }).eq("id", id);
     if (error) {
       setRows((prev) => prev.map((r) => (r.id === id ? { ...r, resolved: current } : r)));
+    }
+  };
+
+  const deleteEvaluation = async (id: string) => {
+    if (!confirm("Tem certeza que deseja excluir esta avaliação? Esta ação não pode ser desfeita.")) return;
+    const prev = rows;
+    setRows((p) => p.filter((r) => r.id !== id));
+    if (expandedId === id) setExpandedId(null);
+    const { error } = await supabase.from("evaluations").delete().eq("id", id);
+    if (error) {
+      setRows(prev);
+      alert("Erro ao excluir avaliação.");
     }
   };
 
@@ -229,7 +241,7 @@ function Avaliacoes() {
                     </div>
                   </div>
 
-                  <div className="flex justify-end pt-2">
+                  <div className="flex flex-wrap justify-end gap-2 pt-2">
                     <button
                       type="button"
                       onClick={() => exportPDF(r)}
@@ -237,6 +249,14 @@ function Avaliacoes() {
                     >
                       <FileDown className="w-4 h-4" />
                       Exportar relatório em PDF
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => deleteEvaluation(r.id)}
+                      className="inline-flex items-center gap-2 text-xs uppercase tracking-wider px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Excluir avaliação
                     </button>
                   </div>
                 </div>
