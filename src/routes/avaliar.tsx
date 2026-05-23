@@ -15,11 +15,12 @@ export const Route = createFileRoute("/avaliar")({
   }),
   validateSearch: (s: Record<string, unknown>) => ({
     mesa: normalizeTableSearchParam(s.mesa),
+    t: typeof s.t === "string" ? s.t : "",
   }),
   component: Avaliar,
 });
 
-interface Waiter { id: string; name: string }
+interface Waiter { id: string; name: string; tenant_id?: string }
 
 function normalizeTableSearchParam(value: unknown) {
   const raw = Array.isArray(value) ? value[0] : value;
@@ -41,7 +42,7 @@ const FIELDS = [
 ] as const;
 
 function Avaliar() {
-  const { mesa } = Route.useSearch();
+  const { mesa, t: tenantId } = Route.useSearch();
   const [waiters, setWaiters] = useState<Waiter[]>([]);
   const [waiterId, setWaiterId] = useState<string>("");
   const [tableNumber, setTableNumber] = useState(mesa);
@@ -75,13 +76,14 @@ function Avaliar() {
   }
 
   useEffect(() => {
-    console.log("[Avaliar] mesa from URL:", mesa, "| full URL:", window.location.href);
+    console.log("[Avaliar] mesa from URL:", mesa, "| tenant:", tenantId, "| full URL:", window.location.href);
     if (mesa && mesa !== tableNumber) setTableNumber(mesa);
-    supabase.from("waiters").select("id, name").eq("active", true).order("name")
-      .then(({ data }) => setWaiters(data ?? []));
+    const query = supabase.from("waiters").select("id, name, tenant_id").eq("active", true);
+    const filtered = tenantId ? query.eq("tenant_id", tenantId) : query;
+    filtered.order("name").then(({ data }) => setWaiters((data ?? []) as Waiter[]));
     setNow(new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mesa]);
+  }, [mesa, tenantId]);
 
   const setRating = (key: string, v: number) => setRatings((r) => ({ ...r, [key]: v }));
 
@@ -112,8 +114,13 @@ function Avaliar() {
       toast.error("E-mail inválido.");
       return;
     }
+    if (!tenantId) {
+      toast.error("QR Code inválido. Solicite um novo ao restaurante.");
+      return;
+    }
     setSubmitting(true);
     const payload = {
+      tenant_id: tenantId,
       waiter_id: waiterId || null,
       table_number: tableNumber || null,
       service_rating: ratings.service_rating,
