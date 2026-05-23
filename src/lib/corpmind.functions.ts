@@ -13,12 +13,7 @@ function loginToEmail(login: string) {
 // Cria o super admin "corpmind" se ainda não existir. Idempotente, público.
 export const bootstrapCorpmind = createServerFn({ method: "POST" }).handler(
   async () => {
-    const { count } = await supabaseAdmin
-      .from("super_admins")
-      .select("*", { count: "exact", head: true });
-    if ((count ?? 0) > 0) return { ok: true, created: false };
-
-    // Cria (ou recupera) o usuário corpmind
+    // Sempre garante que o usuário corpmind existe E tem a senha conhecida
     const { data: existing } = await supabaseAdmin.auth.admin.listUsers();
     let userId = existing?.users.find((u) => u.email === CORPMIND_EMAIL)?.id;
 
@@ -30,14 +25,22 @@ export const bootstrapCorpmind = createServerFn({ method: "POST" }).handler(
       });
       if (error) throw new Error(error.message);
       userId = data.user!.id;
+    } else {
+      // Reseta a senha para o valor padrão (idempotente)
+      await supabaseAdmin.auth.admin.updateUserById(userId, {
+        password: CORPMIND_PASSWORD,
+        email_confirm: true,
+      });
     }
 
     const { error: insErr } = await supabaseAdmin
       .from("super_admins")
       .insert({ user_id: userId });
-    if (insErr && !insErr.message.includes("duplicate")) throw new Error(insErr.message);
+    if (insErr && !insErr.message.toLowerCase().includes("duplicate")) {
+      throw new Error(insErr.message);
+    }
 
-    return { ok: true, created: true };
+    return { ok: true, userId };
   },
 );
 
