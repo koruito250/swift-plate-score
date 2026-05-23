@@ -9,15 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as CorpmindRouteImport } from './routes/corpmind'
 import { Route as AvaliarRouteImport } from './routes/avaliar'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CorpmindIndexRouteImport } from './routes/corpmind.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as CorpmindLoginRouteImport } from './routes/corpmind.login'
+import { Route as CorpmindClientesRouteImport } from './routes/corpmind.clientes'
 import { Route as AdminQrcodesRouteImport } from './routes/admin.qrcodes'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminGarconsRouteImport } from './routes/admin.garcons'
 import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
 
+const CorpmindRoute = CorpmindRouteImport.update({
+  id: '/corpmind',
+  path: '/corpmind',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AvaliarRoute = AvaliarRouteImport.update({
   id: '/avaliar',
   path: '/avaliar',
@@ -33,10 +42,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CorpmindIndexRoute = CorpmindIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CorpmindRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const CorpmindLoginRoute = CorpmindLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => CorpmindRoute,
+} as any)
+const CorpmindClientesRoute = CorpmindClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => CorpmindRoute,
 } as any)
 const AdminQrcodesRoute = AdminQrcodesRouteImport.update({
   id: '/qrcodes',
@@ -63,11 +87,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/avaliar': typeof AvaliarRoute
+  '/corpmind': typeof CorpmindRouteWithChildren
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qrcodes': typeof AdminQrcodesRoute
+  '/corpmind/clientes': typeof CorpmindClientesRoute
+  '/corpmind/login': typeof CorpmindLoginRoute
   '/admin/': typeof AdminIndexRoute
+  '/corpmind/': typeof CorpmindIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,18 +104,25 @@ export interface FileRoutesByTo {
   '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qrcodes': typeof AdminQrcodesRoute
+  '/corpmind/clientes': typeof CorpmindClientesRoute
+  '/corpmind/login': typeof CorpmindLoginRoute
   '/admin': typeof AdminIndexRoute
+  '/corpmind': typeof CorpmindIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/avaliar': typeof AvaliarRoute
+  '/corpmind': typeof CorpmindRouteWithChildren
   '/admin/avaliacoes': typeof AdminAvaliacoesRoute
   '/admin/garcons': typeof AdminGarconsRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/qrcodes': typeof AdminQrcodesRoute
+  '/corpmind/clientes': typeof CorpmindClientesRoute
+  '/corpmind/login': typeof CorpmindLoginRoute
   '/admin/': typeof AdminIndexRoute
+  '/corpmind/': typeof CorpmindIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -95,11 +130,15 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/avaliar'
+    | '/corpmind'
     | '/admin/avaliacoes'
     | '/admin/garcons'
     | '/admin/login'
     | '/admin/qrcodes'
+    | '/corpmind/clientes'
+    | '/corpmind/login'
     | '/admin/'
+    | '/corpmind/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -108,27 +147,42 @@ export interface FileRouteTypes {
     | '/admin/garcons'
     | '/admin/login'
     | '/admin/qrcodes'
+    | '/corpmind/clientes'
+    | '/corpmind/login'
     | '/admin'
+    | '/corpmind'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/avaliar'
+    | '/corpmind'
     | '/admin/avaliacoes'
     | '/admin/garcons'
     | '/admin/login'
     | '/admin/qrcodes'
+    | '/corpmind/clientes'
+    | '/corpmind/login'
     | '/admin/'
+    | '/corpmind/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AvaliarRoute: typeof AvaliarRoute
+  CorpmindRoute: typeof CorpmindRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/corpmind': {
+      id: '/corpmind'
+      path: '/corpmind'
+      fullPath: '/corpmind'
+      preLoaderRoute: typeof CorpmindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/avaliar': {
       id: '/avaliar'
       path: '/avaliar'
@@ -150,12 +204,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/corpmind/': {
+      id: '/corpmind/'
+      path: '/'
+      fullPath: '/corpmind/'
+      preLoaderRoute: typeof CorpmindIndexRouteImport
+      parentRoute: typeof CorpmindRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/corpmind/login': {
+      id: '/corpmind/login'
+      path: '/login'
+      fullPath: '/corpmind/login'
+      preLoaderRoute: typeof CorpmindLoginRouteImport
+      parentRoute: typeof CorpmindRoute
+    }
+    '/corpmind/clientes': {
+      id: '/corpmind/clientes'
+      path: '/clientes'
+      fullPath: '/corpmind/clientes'
+      preLoaderRoute: typeof CorpmindClientesRouteImport
+      parentRoute: typeof CorpmindRoute
     }
     '/admin/qrcodes': {
       id: '/admin/qrcodes'
@@ -206,20 +281,28 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface CorpmindRouteChildren {
+  CorpmindClientesRoute: typeof CorpmindClientesRoute
+  CorpmindLoginRoute: typeof CorpmindLoginRoute
+  CorpmindIndexRoute: typeof CorpmindIndexRoute
+}
+
+const CorpmindRouteChildren: CorpmindRouteChildren = {
+  CorpmindClientesRoute: CorpmindClientesRoute,
+  CorpmindLoginRoute: CorpmindLoginRoute,
+  CorpmindIndexRoute: CorpmindIndexRoute,
+}
+
+const CorpmindRouteWithChildren = CorpmindRoute._addFileChildren(
+  CorpmindRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AvaliarRoute: AvaliarRoute,
+  CorpmindRoute: CorpmindRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

@@ -31,6 +31,7 @@ export type Database = {
           resolved: boolean
           service_rating: number
           table_number: string | null
+          tenant_id: string
           waiter_id: string | null
         }
         Insert: {
@@ -49,6 +50,7 @@ export type Database = {
           resolved?: boolean
           service_rating: number
           table_number?: string | null
+          tenant_id: string
           waiter_id?: string | null
         }
         Update: {
@@ -67,6 +69,7 @@ export type Database = {
           resolved?: boolean
           service_rating?: number
           table_number?: string | null
+          tenant_id?: string
           waiter_id?: string | null
         }
         Relationships: [
@@ -78,6 +81,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      super_admins: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tenants: {
+        Row: {
+          auth_user_id: string | null
+          created_at: string
+          data_expiracao: string
+          id: string
+          login: string
+          nome: string
+          status: Database["public"]["Enums"]["tenant_status"]
+          updated_at: string
+          valor_assinatura: number
+        }
+        Insert: {
+          auth_user_id?: string | null
+          created_at?: string
+          data_expiracao: string
+          id?: string
+          login: string
+          nome: string
+          status?: Database["public"]["Enums"]["tenant_status"]
+          updated_at?: string
+          valor_assinatura?: number
+        }
+        Update: {
+          auth_user_id?: string | null
+          created_at?: string
+          data_expiracao?: string
+          id?: string
+          login?: string
+          nome?: string
+          status?: Database["public"]["Enums"]["tenant_status"]
+          updated_at?: string
+          valor_assinatura?: number
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
@@ -106,18 +160,21 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          tenant_id: string
         }
         Insert: {
           active?: boolean
           created_at?: string
           id?: string
           name: string
+          tenant_id: string
         }
         Update: {
           active?: boolean
           created_at?: string
           id?: string
           name?: string
+          tenant_id?: string
         }
         Relationships: []
       }
@@ -126,6 +183,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      current_tenant_id: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -133,9 +191,11 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_super_admin: { Args: { _uid: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"
+      tenant_status: "ativo" | "bloqueado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -264,6 +324,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      tenant_status: ["ativo", "bloqueado"],
     },
   },
 } as const

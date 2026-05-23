@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Trash2, Plus, Pencil, Check, X } from "lucide-react";
+import { useTenant } from "@/lib/tenant-context";
 
 export const Route = createFileRoute("/admin/garcons")({
   component: Garcons,
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/admin/garcons")({
 interface Waiter { id: string; name: string; active: boolean }
 
 function Garcons() {
+  const tenant = useTenant();
   const [waiters, setWaiters] = useState<Waiter[]>([]);
   const [name, setName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -60,7 +62,7 @@ function Garcons() {
       toast.error("Sessão expirada. Faça login novamente.");
       return;
     }
-    const { error } = await supabase.from("waiters").insert({ name: trimmed });
+    const { error } = await supabase.from("waiters").insert({ name: trimmed, tenant_id: tenant.id });
     if (error) {
       console.error("Erro ao adicionar garçom:", error);
       toast.error(error.message);
