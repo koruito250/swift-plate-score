@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Trash2, Plus, Pencil, Check, X } from "lucide-react";
+import { useTenant } from "@/lib/tenant-context";
 
 export const Route = createFileRoute("/admin/garcons")({
   component: Garcons,
