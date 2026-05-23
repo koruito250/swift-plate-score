@@ -2,12 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
 import { Download, Printer } from "lucide-react";
+import { useTenant } from "@/lib/tenant-context";
 
 export const Route = createFileRoute("/admin/qrcodes")({
   component: QRCodes,
 });
 
 function QRCodes() {
+  const tenant = useTenant();
   const [baseUrl, setBaseUrl] = useState("");
   const [start, setStart] = useState(1);
   const [end, setEnd] = useState(10);
@@ -53,7 +55,7 @@ function QRCodes() {
     if (!baseUrl) return;
     const out = await Promise.all(
       tables.map(async (t) => {
-        const url = `${baseUrl}?mesa=${encodeURIComponent(t.label)}`;
+        const url = `${baseUrl}?mesa=${encodeURIComponent(t.label)}&t=${encodeURIComponent(tenant.id)}`;
         const dataUrl = await QRCode.toDataURL(url, {
           width: 600,
           margin: 2,
