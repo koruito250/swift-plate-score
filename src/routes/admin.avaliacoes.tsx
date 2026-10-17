@@ -25,6 +25,7 @@ interface Row {
   customer_name: string | null;
   customer_phone: string | null;
   customer_email: string | null;
+  birth_date: string | null;
   discount_used: boolean;
 }
 
@@ -130,6 +131,7 @@ function Avaliacoes() {
     line("Nome", r.customer_name ?? "—");
     line("Telefone", r.customer_phone ?? "—");
     line("E-mail", r.customer_email ?? "—");
+    line("Nascimento", r.birth_date ? new Date(r.birth_date + "T12:00:00").toLocaleDateString("pt-BR") : "—");
 
     section("Notas");
     line("Avaliação geral", `${r.overall_rating}/5`);
@@ -245,10 +247,11 @@ function Avaliacoes() {
 
                   <div>
                     <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Dados do cliente</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
                       <InfoCell label="Nome" value={r.customer_name ?? "—"} />
                       <InfoCell label="Telefone" value={r.customer_phone ?? "—"} />
                       <InfoCell label="E-mail" value={r.customer_email ?? "—"} />
+                      <InfoCell label="Nascimento" value={r.birth_date ? new Date(r.birth_date + "T12:00:00").toLocaleDateString("pt-BR") : "—"} />
                     </div>
                   </div>
 
