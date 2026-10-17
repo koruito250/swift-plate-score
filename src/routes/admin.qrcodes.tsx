@@ -3,6 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
 import { Download, Printer } from "lucide-react";
 import { useTenant } from "@/lib/tenant-context";
+import { buildEvaluationLink } from "@/lib/evaluation-link";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/qrcodes")({
   component: QRCodes,
@@ -53,9 +55,10 @@ function QRCodes() {
 
   async function generate() {
     if (!baseUrl) return;
+    try {
     const out = await Promise.all(
       tables.map(async (t) => {
-        const url = `${baseUrl}?mesa=${encodeURIComponent(t.label)}&t=${encodeURIComponent(tenant.id)}`;
+        const url = buildEvaluationLink(baseUrl, t.label, tenant.id);
         const dataUrl = await QRCode.toDataURL(url, {
           width: 600,
           margin: 2,
@@ -65,6 +68,9 @@ function QRCodes() {
       })
     );
     setItems(out);
+    } catch {
+      toast.error("Informe uma URL pública válida para gerar os QR Codes.");
+    }
   }
 
   function downloadOne(label: string, dataUrl: string) {

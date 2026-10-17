@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { StarRating } from "@/components/StarRating";
 import { ChevronDown, ChevronUp, FileDown, Trash2 } from "lucide-react";
 import jsPDF from "jspdf";
+import { useTenant } from "@/lib/tenant-context";
 
 export const Route = createFileRoute("/admin/avaliacoes")({
   component: Avaliacoes,
@@ -30,6 +31,7 @@ interface Row {
 }
 
 function Avaliacoes() {
+  const tenant = useTenant();
   const [rows, setRows] = useState<Row[]>([]);
   const [waiterNames, setWaiterNames] = useState<Map<string, string>>(new Map());
   const [filter, setFilter] = useState<"all" | "alerts">("all");
@@ -37,13 +39,13 @@ function Avaliacoes() {
 
   useEffect(() => {
     Promise.all([
-      supabase.from("evaluations").select("*").order("created_at", { ascending: false }),
-      supabase.from("waiters").select("id, name"),
+      supabase.from("evaluations").select("*").eq("tenant_id", tenant.id).order("created_at", { ascending: false }),
+      supabase.from("waiters").select("id, name").eq("tenant_id", tenant.id),
     ]).then(([{ data: e }, { data: w }]) => {
       setRows((e ?? []) as Row[]);
       setWaiterNames(new Map((w ?? []).map((x) => [x.id, x.name])));
     });
-  }, []);
+  }, [tenant.id]);
 
   const visible = filter === "alerts" ? rows.filter((r) => r.overall_rating <= 2) : rows;
 
@@ -54,7 +56,7 @@ function Avaliacoes() {
   const toggleResolved = async (id: string, current: boolean) => {
     const next = !current;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, resolved: next } : r)));
-    const { error } = await supabase.from("evaluations").update({ resolved: next }).eq("id", id);
+    const { error } = await supabase.from("evaluations").update({ resolved: next }).eq("id", id).eq("tenant_id", tenant.id);
     if (error) {
       setRows((prev) => prev.map((r) => (r.id === id ? { ...r, resolved: current } : r)));
     }
@@ -63,7 +65,7 @@ function Avaliacoes() {
   const toggleDiscount = async (id: string, current: boolean) => {
     const next = !current;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, discount_used: next } : r)));
-    const { error } = await supabase.from("evaluations").update({ discount_used: next }).eq("id", id);
+    const { error } = await supabase.from("evaluations").update({ discount_used: next }).eq("id", id).eq("tenant_id", tenant.id);
     if (error) {
       setRows((prev) => prev.map((r) => (r.id === id ? { ...r, discount_used: current } : r)));
     }
@@ -74,7 +76,7 @@ function Avaliacoes() {
     const prev = rows;
     setRows((p) => p.filter((r) => r.id !== id));
     if (expandedId === id) setExpandedId(null);
-    const { error } = await supabase.from("evaluations").delete().eq("id", id);
+    const { error } = await supabase.from("evaluations").delete().eq("id", id).eq("tenant_id", tenant.id);
     if (error) {
       setRows(prev);
       alert("Erro ao excluir avaliação.");

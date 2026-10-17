@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Trash2, Plus, Pencil, Check, X } from "lucide-react";
 import { useTenant } from "@/lib/tenant-context";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin/garcons")({
   component: Garcons,
@@ -34,21 +35,23 @@ function Garcons() {
       toast.error("Nome não pode ficar vazio");
       return;
     }
-    const { error } = await supabase.from("waiters").update({ name: trimmed }).eq("id", id);
+    const { data, error } = await supabase.from("waiters").update({ name: trimmed }).eq("id", id).eq("tenant_id", tenant.id).select("id");
     if (error) {
       toast.error(error.message);
       return;
     }
+    if (!data?.length) { toast.error("Garçom não encontrado neste restaurante."); return; }
     toast.success("Garçom atualizado");
     cancelEdit();
     load();
   }
 
   async function load() {
-    const { data } = await supabase.from("waiters").select("*").order("name");
+    const { data, error } = await supabase.from("waiters").select("*").eq("tenant_id", tenant.id).order("name");
+    if (error) { toast.error("Não foi possível carregar os garçons."); return; }
     setWaiters(data ?? []);
   }
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [tenant.id]);
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -74,13 +77,16 @@ function Garcons() {
   }
 
   async function toggle(w: Waiter) {
-    await supabase.from("waiters").update({ active: !w.active }).eq("id", w.id);
+    const { data, error } = await supabase.from("waiters").update({ active: !w.active }).eq("id", w.id).eq("tenant_id", tenant.id).select("id");
+    if (error || !data?.length) { toast.error(error?.message ?? "Garçom não encontrado neste restaurante."); return; }
     load();
   }
 
   async function remove(id: string) {
     if (!confirm("Remover este garçom?")) return;
-    await supabase.from("waiters").delete().eq("id", id);
+    const { data, error } = await supabase.from("waiters").delete().eq("id", id).eq("tenant_id", tenant.id).select("id");
+    if (error || !data?.length) { toast.error(error?.message ?? "Garçom não encontrado neste restaurante."); return; }
+    toast.success("Garçom removido");
     load();
   }
 
