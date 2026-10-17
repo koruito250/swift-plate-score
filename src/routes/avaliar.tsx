@@ -296,6 +296,19 @@ function Avaliar() {
                     className="w-full bg-card border border-border px-4 py-3 text-foreground"
                   />
                 </div>
+                <div>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Data de nascimento</label>
+                  <input
+                    type="date"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    max={new Date().toISOString().slice(0, 10)}
+                    className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                  />
+                  <p className="text-xs text-muted-foreground italic mt-1">
+                    Opcional — usada para promoções de aniversário.
+                  </p>
+                </div>
               </div>
             </div>
 
