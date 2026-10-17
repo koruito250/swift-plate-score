@@ -9,27 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as CorpmindRouteImport } from './routes/corpmind'
-import { Route as AvaliarRouteImport } from './routes/avaliar'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CorpmindIndexRouteImport } from './routes/corpmind.index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AvaliarRouteImport } from './routes/avaliar'
+import { Route as CorpmindRouteImport } from './routes/corpmind'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as CorpmindLoginRouteImport } from './routes/corpmind.login'
-import { Route as CorpmindClientesRouteImport } from './routes/corpmind.clientes'
-import { Route as AdminQrcodesRouteImport } from './routes/admin.qrcodes'
-import { Route as AdminLoginRouteImport } from './routes/admin.login'
-import { Route as AdminGarconsRouteImport } from './routes/admin.garcons'
 import { Route as AdminAvaliacoesRouteImport } from './routes/admin.avaliacoes'
+import { Route as AdminGarconsRouteImport } from './routes/admin.garcons'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminQrcodesRouteImport } from './routes/admin.qrcodes'
+import { Route as CorpmindIndexRouteImport } from './routes/corpmind.index'
+import { Route as CorpmindClientesRouteImport } from './routes/corpmind.clientes'
+import { Route as CorpmindLoginRouteImport } from './routes/corpmind.login'
 
-const CorpmindRoute = CorpmindRouteImport.update({
-  id: '/corpmind',
-  path: '/corpmind',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AvaliarRoute = AvaliarRouteImport.update({
-  id: '/avaliar',
-  path: '/avaliar',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -37,39 +32,24 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AvaliarRoute = AvaliarRouteImport.update({
+  id: '/avaliar',
+  path: '/avaliar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CorpmindIndexRoute = CorpmindIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => CorpmindRoute,
+const CorpmindRoute = CorpmindRouteImport.update({
+  id: '/corpmind',
+  path: '/corpmind',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const CorpmindLoginRoute = CorpmindLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => CorpmindRoute,
-} as any)
-const CorpmindClientesRoute = CorpmindClientesRouteImport.update({
-  id: '/clientes',
-  path: '/clientes',
-  getParentRoute: () => CorpmindRoute,
-} as any)
-const AdminQrcodesRoute = AdminQrcodesRouteImport.update({
-  id: '/qrcodes',
-  path: '/qrcodes',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
+  id: '/avaliacoes',
+  path: '/avaliacoes',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminGarconsRoute = AdminGarconsRouteImport.update({
@@ -77,10 +57,30 @@ const AdminGarconsRoute = AdminGarconsRouteImport.update({
   path: '/garcons',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminAvaliacoesRoute = AdminAvaliacoesRouteImport.update({
-  id: '/avaliacoes',
-  path: '/avaliacoes',
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminQrcodesRoute = AdminQrcodesRouteImport.update({
+  id: '/qrcodes',
+  path: '/qrcodes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const CorpmindIndexRoute = CorpmindIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CorpmindRoute,
+} as any)
+const CorpmindClientesRoute = CorpmindClientesRouteImport.update({
+  id: '/clientes',
+  path: '/clientes',
+  getParentRoute: () => CorpmindRoute,
+} as any)
+const CorpmindLoginRoute = CorpmindLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => CorpmindRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -176,18 +176,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/corpmind': {
-      id: '/corpmind'
-      path: '/corpmind'
-      fullPath: '/corpmind'
-      preLoaderRoute: typeof CorpmindRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/avaliar': {
-      id: '/avaliar'
-      path: '/avaliar'
-      fullPath: '/avaliar'
-      preLoaderRoute: typeof AvaliarRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -197,19 +190,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/avaliar': {
+      id: '/avaliar'
+      path: '/avaliar'
+      fullPath: '/avaliar'
+      preLoaderRoute: typeof AvaliarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/corpmind/': {
-      id: '/corpmind/'
-      path: '/'
-      fullPath: '/corpmind/'
-      preLoaderRoute: typeof CorpmindIndexRouteImport
-      parentRoute: typeof CorpmindRoute
+    '/corpmind': {
+      id: '/corpmind'
+      path: '/corpmind'
+      fullPath: '/corpmind'
+      preLoaderRoute: typeof CorpmindRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/': {
       id: '/admin/'
@@ -218,32 +211,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/corpmind/login': {
-      id: '/corpmind/login'
-      path: '/login'
-      fullPath: '/corpmind/login'
-      preLoaderRoute: typeof CorpmindLoginRouteImport
-      parentRoute: typeof CorpmindRoute
-    }
-    '/corpmind/clientes': {
-      id: '/corpmind/clientes'
-      path: '/clientes'
-      fullPath: '/corpmind/clientes'
-      preLoaderRoute: typeof CorpmindClientesRouteImport
-      parentRoute: typeof CorpmindRoute
-    }
-    '/admin/qrcodes': {
-      id: '/admin/qrcodes'
-      path: '/qrcodes'
-      fullPath: '/admin/qrcodes'
-      preLoaderRoute: typeof AdminQrcodesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
+    '/admin/avaliacoes': {
+      id: '/admin/avaliacoes'
+      path: '/avaliacoes'
+      fullPath: '/admin/avaliacoes'
+      preLoaderRoute: typeof AdminAvaliacoesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/garcons': {
@@ -253,12 +225,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGarconsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/avaliacoes': {
-      id: '/admin/avaliacoes'
-      path: '/avaliacoes'
-      fullPath: '/admin/avaliacoes'
-      preLoaderRoute: typeof AdminAvaliacoesRouteImport
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/admin/qrcodes': {
+      id: '/admin/qrcodes'
+      path: '/qrcodes'
+      fullPath: '/admin/qrcodes'
+      preLoaderRoute: typeof AdminQrcodesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/corpmind/': {
+      id: '/corpmind/'
+      path: '/'
+      fullPath: '/corpmind/'
+      preLoaderRoute: typeof CorpmindIndexRouteImport
+      parentRoute: typeof CorpmindRoute
+    }
+    '/corpmind/clientes': {
+      id: '/corpmind/clientes'
+      path: '/clientes'
+      fullPath: '/corpmind/clientes'
+      preLoaderRoute: typeof CorpmindClientesRouteImport
+      parentRoute: typeof CorpmindRoute
+    }
+    '/corpmind/login': {
+      id: '/corpmind/login'
+      path: '/login'
+      fullPath: '/corpmind/login'
+      preLoaderRoute: typeof CorpmindLoginRouteImport
+      parentRoute: typeof CorpmindRoute
     }
   }
 }

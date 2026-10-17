@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           ambience_rating: number
           bill_time_rating: number
+          birth_date: string | null
           comment: string | null
           created_at: string
           customer_email: string | null
@@ -37,6 +38,7 @@ export type Database = {
         Insert: {
           ambience_rating: number
           bill_time_rating: number
+          birth_date?: string | null
           comment?: string | null
           created_at?: string
           customer_email?: string | null
@@ -56,6 +58,7 @@ export type Database = {
         Update: {
           ambience_rating?: number
           bill_time_rating?: number
+          birth_date?: string | null
           comment?: string | null
           created_at?: string
           customer_email?: string | null

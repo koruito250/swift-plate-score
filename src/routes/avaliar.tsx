@@ -50,6 +50,7 @@ function Avaliar() {
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [ratings, setRatings] = useState<Record<string, number>>({});
@@ -133,6 +134,7 @@ function Avaliar() {
       customer_name: trimmedName.slice(0, 100),
       customer_phone: trimmedPhone.slice(0, 30),
       customer_email: trimmedEmail.slice(0, 255),
+      birth_date: birthDate || null,
     };
     const { error } = await supabase.from("evaluations").insert(payload);
     setSubmitting(false);
@@ -293,6 +295,19 @@ function Avaliar() {
                     placeholder="voce@email.com"
                     className="w-full bg-card border border-border px-4 py-3 text-foreground"
                   />
+                </div>
+                <div>
+                  <label className="text-sm uppercase tracking-wider font-medium block mb-2">Data de nascimento</label>
+                  <input
+                    type="date"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    max={new Date().toISOString().slice(0, 10)}
+                    className="w-full bg-card border border-border px-4 py-3 text-foreground"
+                  />
+                  <p className="text-xs text-muted-foreground italic mt-1">
+                    Opcional — usada para promoções de aniversário.
+                  </p>
                 </div>
               </div>
             </div>

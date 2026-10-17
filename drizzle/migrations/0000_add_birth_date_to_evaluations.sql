@@ -1,0 +1,1 @@
+ALTER TABLE public.evaluations ADD COLUMN birth_date date;
