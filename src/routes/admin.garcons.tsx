@@ -103,9 +103,9 @@ function Garcons() {
           maxLength={80}
           className="flex-1 bg-card border border-border px-4 py-3"
         />
-        <button type="submit" className="px-6 bg-foreground text-background uppercase tracking-wider text-xs font-semibold hover:bg-primary flex items-center gap-2">
+        <Button type="submit" className="h-auto rounded-none px-6 bg-foreground text-background uppercase tracking-wider text-xs font-semibold hover:bg-primary flex items-center gap-2">
           <Plus className="h-4 w-4" /> Adicionar
-        </button>
+        </Button>
       </form>
 
       <div className="border border-border bg-card divide-y divide-border">
@@ -135,24 +135,24 @@ function Garcons() {
             <div className="flex items-center gap-2">
               {editingId === w.id ? (
                 <>
-                  <button onClick={() => saveEdit(w.id)} className="p-2 text-foreground hover:text-primary" title="Salvar">
+                  <Button variant="ghost" size="icon" onClick={() => saveEdit(w.id)} className="rounded-none p-2 text-foreground hover:text-primary" title="Salvar" aria-label="Salvar">
                     <Check className="h-4 w-4" />
-                  </button>
-                  <button onClick={cancelEdit} className="p-2 text-muted-foreground hover:text-foreground" title="Cancelar">
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={cancelEdit} className="rounded-none p-2 text-muted-foreground hover:text-foreground" title="Cancelar" aria-label="Cancelar">
                     <X className="h-4 w-4" />
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <>
-                  <button onClick={() => toggle(w)} className="px-3 py-1 text-xs uppercase tracking-wider border border-border hover:border-foreground">
+                  <Button variant="outline" size="sm" onClick={() => toggle(w)} className="rounded-none px-3 py-1 text-xs uppercase tracking-wider border border-border hover:border-foreground">
                     {w.active ? "Desativar" : "Ativar"}
-                  </button>
-                  <button onClick={() => startEdit(w)} className="p-2 text-muted-foreground hover:text-foreground" title="Editar">
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => startEdit(w)} className="rounded-none p-2 text-muted-foreground hover:text-foreground" title="Editar" aria-label={`Editar ${w.name}`}>
                     <Pencil className="h-4 w-4" />
-                  </button>
-                  <button onClick={() => remove(w.id)} className="p-2 text-muted-foreground hover:text-primary" title="Remover">
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => remove(w.id)} className="rounded-none p-2 text-muted-foreground hover:text-primary" title="Remover" aria-label={`Remover ${w.name}`}>
                     <Trash2 className="h-4 w-4" />
-                  </button>
+                  </Button>
                 </>
               )}
             </div>

@@ -8,6 +8,13 @@
       "when": 1792198860839,
       "tag": "0000_add_birth_date_to_evaluations",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792200681084,
+      "tag": "0001_scope_public_waiter_reads_to_guests",
+      "breakpoints": true
     }
   ]
 }
