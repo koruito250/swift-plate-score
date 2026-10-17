@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792198860839,
+      "tag": "0000_add_birth_date_to_evaluations",
+      "breakpoints": true
+    }
+  ]
+}
