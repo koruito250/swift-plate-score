@@ -5,6 +5,7 @@ import { StarRating } from "@/components/StarRating";
 import { toast } from "sonner";
 import { Check, Download } from "lucide-react";
 import { toPng } from "html-to-image";
+import { normalizeTableSearchParam } from "@/lib/evaluation-link";
 
 export const Route = createFileRoute("/avaliar")({
   head: () => ({
@@ -21,16 +22,6 @@ export const Route = createFileRoute("/avaliar")({
 });
 
 interface Waiter { id: string; name: string; tenant_id?: string }
-
-function normalizeTableSearchParam(value: unknown) {
-  const raw = Array.isArray(value) ? value[0] : value;
-  if (raw === null || raw === undefined) return "";
-
-  const normalized = String(raw).trim();
-  if (!normalized) return "";
-
-  return /^\d+$/.test(normalized) ? normalized.padStart(2, "0") : normalized;
-}
 
 const FIELDS = [
   { key: "service_rating", label: "Atendimento do garçom" },
@@ -77,12 +68,20 @@ function Avaliar() {
   }
 
   useEffect(() => {
-    console.log("[Avaliar] mesa from URL:", mesa, "| tenant:", tenantId, "| full URL:", window.location.href);
     if (mesa && mesa !== tableNumber) setTableNumber(mesa);
-    const query = supabase.from("waiters").select("id, name, tenant_id").eq("active", true);
-    const filtered = tenantId ? query.eq("tenant_id", tenantId) : query;
-    filtered.order("name").then(({ data }) => setWaiters((data ?? []) as Waiter[]));
+    setWaiterId("");
+    setWaiters([]);
+    let cancelled = false;
+    if (tenantId) {
+      supabase.from("waiters").select("id, name, tenant_id").eq("active", true).eq("tenant_id", tenantId)
+        .order("name").then(({ data, error }) => {
+          if (cancelled) return;
+          if (error) { toast.error("Não foi possível carregar os garçons. Tente novamente."); return; }
+          setWaiters((data ?? []) as Waiter[]);
+        });
+    }
     setNow(new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mesa, tenantId]);
 
@@ -233,7 +232,7 @@ function Avaliar() {
                 onChange={(e) => setWaiterId(e.target.value)}
                 className="w-full bg-card border border-border px-4 py-3 text-foreground"
               >
-                <option value="">— Selecione —</option>
+                <option value="">{waiters.length ? "— Selecione —" : "Nenhum garçom disponível"}</option>
                 {waiters.map((w) => (
                   <option key={w.id} value={w.id}>{w.name}</option>
                 ))}

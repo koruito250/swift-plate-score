@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AlertTriangle, TrendingUp, Users, Utensils } from "lucide-react";
+import { useTenant } from "@/lib/tenant-context";
 
 export const Route = createFileRoute("/admin/")({
   component: Dashboard,
@@ -24,6 +25,7 @@ interface Evaluation {
 interface Waiter { id: string; name: string }
 
 function Dashboard() {
+  const tenant = useTenant();
   const [evals, setEvals] = useState<Evaluation[]>([]);
   const [waiters, setWaiters] = useState<Waiter[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,8 +33,8 @@ function Dashboard() {
   useEffect(() => {
     async function load() {
       const [{ data: e }, { data: w }] = await Promise.all([
-        supabase.from("evaluations").select("*").order("created_at", { ascending: false }),
-        supabase.from("waiters").select("id, name"),
+        supabase.from("evaluations").select("*").eq("tenant_id", tenant.id).order("created_at", { ascending: false }),
+        supabase.from("waiters").select("id, name").eq("tenant_id", tenant.id),
       ]);
       setEvals(e ?? []);
       setWaiters(w ?? []);
@@ -41,12 +43,12 @@ function Dashboard() {
     load();
 
     const channel = supabase
-      .channel("evals-realtime")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "evaluations" },
+      .channel(`evals-realtime-${tenant.id}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "evaluations", filter: `tenant_id=eq.${tenant.id}` },
         (payload) => setEvals((prev) => [payload.new as Evaluation, ...prev]))
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, []);
+  }, [tenant.id]);
 
   if (loading) {
     return <div className="max-w-7xl mx-auto px-6 py-12"><p className="editorial-eyebrow">Carregando…</p></div>;
@@ -81,7 +83,7 @@ function Dashboard() {
     .sort((a, b) => b.avg - a.avg);
 
   async function resolve(id: string) {
-    await supabase.from("evaluations").update({ resolved: true }).eq("id", id);
+    await supabase.from("evaluations").update({ resolved: true }).eq("id", id).eq("tenant_id", tenant.id);
     setEvals((prev) => prev.map((e) => (e.id === id ? { ...e, resolved: true } : e)));
   }
 
