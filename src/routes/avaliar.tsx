@@ -50,6 +50,7 @@ function Avaliar() {
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [ratings, setRatings] = useState<Record<string, number>>({});
@@ -133,6 +134,7 @@ function Avaliar() {
       customer_name: trimmedName.slice(0, 100),
       customer_phone: trimmedPhone.slice(0, 30),
       customer_email: trimmedEmail.slice(0, 255),
+      birth_date: birthDate || null,
     };
     const { error } = await supabase.from("evaluations").insert(payload);
     setSubmitting(false);
