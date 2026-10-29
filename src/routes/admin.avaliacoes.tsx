@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +8,7 @@ import jsPDF from "jspdf";
 import { useTenant } from "@/lib/tenant-context";
 
 export const Route = createFileRoute("/admin/avaliacoes")({
+  head: () => pageMeta("Avaliações — CorpMind", "Consulte as avaliações e benefícios dos clientes do seu restaurante."),
   component: Avaliacoes,
 });
 

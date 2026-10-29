@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
@@ -7,6 +8,7 @@ import { buildEvaluationLink } from "@/lib/evaluation-link";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/qrcodes")({
+  head: () => pageMeta("QR Codes das mesas — CorpMind", "Gere QR Codes identificados por restaurante e mesa para avaliações."),
   component: QRCodes,
 });
 

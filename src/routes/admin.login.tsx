@@ -1,12 +1,11 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/login")({
-  head: () => ({
-    meta: [{ title: "Acesso administrativo" }],
-  }),
+  head: () => pageMeta("Acesso do restaurante — CorpMind", "Entre no painel exclusivo do seu restaurante com seu login e senha."),
   component: AdminLogin,
 });
 

@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,6 +6,7 @@ import { Users, UserCheck, UserX, CalendarX, DollarSign, ArrowRight } from "luci
 import { tenantMetrics } from "@/lib/tenant-metrics";
 
 export const Route = createFileRoute("/corpmind/")({
+  head: () => pageMeta("Administrador geral — CorpMind", "Gerencie as assinaturas dos restaurantes e acompanhe clientes ativos, bloqueados e vencidos."),
   component: CorpmindDashboard,
 });
 

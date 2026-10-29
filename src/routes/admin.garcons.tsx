@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +8,7 @@ import { useTenant } from "@/lib/tenant-context";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin/garcons")({
+  head: () => pageMeta("Garçons — CorpMind", "Gerencie a equipe do seu restaurante no CorpMind."),
   component: Garcons,
 });
 

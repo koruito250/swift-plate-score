@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -12,6 +13,7 @@ import {
 } from "@/lib/corpmind.functions";
 
 export const Route = createFileRoute("/corpmind/clientes")({
+  head: () => pageMeta("Clientes e assinaturas — CorpMind", "Cadastre e gerencie os clientes e assinaturas do sistema CorpMind."),
   component: CorpmindClientes,
 });
 
@@ -93,8 +95,8 @@ function CorpmindClientes() {
                 t.status === "bloqueado"
                   ? { label: "Bloqueado", cls: "bg-destructive/15 text-destructive" }
                   : expired
-                    ? { label: "Vencido", cls: "bg-yellow-500/15 text-yellow-600" }
-                    : { label: "Ativo", cls: "bg-emerald-500/15 text-emerald-600" };
+                    ? { label: "Vencido", cls: "bg-warning/15 text-warning-foreground" }
+                    : { label: "Ativo", cls: "bg-success/15 text-success" };
               return (
                 <tr key={t.id} className="hover:bg-muted/20">
                   <td className="px-4 py-3 font-semibold">{t.nome}</td>
@@ -106,7 +108,7 @@ function CorpmindClientes() {
                     })}
                   </td>
                   <td className="px-4 py-3">
-                    {new Date(t.data_expiracao).toLocaleDateString("pt-BR")}
+                    {new Date(t.data_expiracao + "T12:00:00").toLocaleDateString("pt-BR")}
                   </td>
                   <td className="px-4 py-3">
                     <span className={`text-[10px] uppercase tracking-wider px-2 py-1 font-semibold ${status.cls}`}>
@@ -117,6 +119,7 @@ function CorpmindClientes() {
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={async () => {
+                          try {
                           await updateFn({
                             data: {
                               id: t.id,
@@ -125,6 +128,7 @@ function CorpmindClientes() {
                           });
                           toast.success(t.status === "ativo" ? "Cliente bloqueado" : "Cliente ativado");
                           load();
+                          } catch (e) { toast.error(e instanceof Error ? e.message : "Não foi possível alterar o status."); }
                         }}
                         className="p-2 text-muted-foreground hover:text-foreground"
                         title={t.status === "ativo" ? "Bloquear" : "Desbloquear"}
@@ -252,7 +256,7 @@ function TenantFormModal({
   const [saving, setSaving] = useState(false);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-foreground/60 flex items-center justify-center p-4">
       <div className="bg-background border border-border w-full max-w-md p-6 relative">
         <button onClick={onClose} className="absolute top-3 right-3 p-2 text-muted-foreground hover:text-foreground">
           <X className="h-4 w-4" />
@@ -357,7 +361,7 @@ function PasswordModal({
   const [pw, setPw] = useState("");
   const [saving, setSaving] = useState(false);
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-foreground/60 flex items-center justify-center p-4">
       <div className="bg-background border border-border w-full max-w-sm p-6 relative">
         <button onClick={onClose} className="absolute top-3 right-3 p-2 text-muted-foreground hover:text-foreground">
           <X className="h-4 w-4" />
