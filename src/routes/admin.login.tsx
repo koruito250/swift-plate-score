@@ -25,7 +25,8 @@ function AdminLogin() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const email = `${login.trim().toLowerCase()}@corpmind.local`;
+    const normalized = login.trim().toLowerCase();
+    const email = normalized.includes("@") ? normalized : normalized === "corpmind" ? "corpmind@gmail.com" : `${normalized}@corpmind.local`;
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error || !data.user) {
       setLoading(false);
@@ -118,6 +119,7 @@ function AdminLogin() {
           <p className="text-xs text-muted-foreground italic mt-6 text-center">
             Use o login e senha fornecidos pela CorpMind.
           </p>
+          <Link to="/corpmind/login" className="block text-center text-sm text-primary mt-4 hover:underline">Administrador geral</Link>
         </div>
       </div>
     </div>

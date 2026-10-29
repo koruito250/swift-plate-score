@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, UserCheck, UserX, CalendarX, DollarSign, ArrowRight } from "lucide-react";
+import { tenantMetrics } from "@/lib/tenant-metrics";
 
 export const Route = createFileRoute("/corpmind/")({
   component: CorpmindDashboard,
@@ -40,20 +41,14 @@ function CorpmindDashboard() {
     );
 
   const today = new Date().toISOString().slice(0, 10);
-  const total = tenants.length;
-  const ativos = tenants.filter((t) => t.status === "ativo" && t.data_expiracao >= today).length;
-  const bloqueados = tenants.filter((t) => t.status === "bloqueado").length;
-  const vencidos = tenants.filter((t) => t.status === "ativo" && t.data_expiracao < today).length;
-  const totalReceita = tenants
-    .filter((t) => t.status === "ativo")
-    .reduce((s, t) => s + Number(t.valor_assinatura ?? 0), 0);
+  const { total, ativos, bloqueados, vencidos, totalReceita } = tenantMetrics(tenants, today);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10 space-y-12">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="editorial-eyebrow mb-2">Visão geral</p>
-          <h1 className="text-5xl font-display font-bold">Dashboard CorpMind</h1>
+          <h1 className="text-4xl sm:text-5xl font-display font-bold">Administrador geral</h1>
           <p className="text-muted-foreground italic mt-2">
             Acompanhe seus clientes e receita em tempo real.
           </p>
@@ -72,7 +67,7 @@ function CorpmindDashboard() {
         <Kpi label="Bloqueados" value={bloqueados} icon={<UserX className="h-5 w-5" />} alert={bloqueados > 0} />
         <Kpi label="Vencidos" value={vencidos} icon={<CalendarX className="h-5 w-5" />} alert={vencidos > 0} />
         <Kpi
-          label="Receita ativa"
+          label="Valor total"
           value={totalReceita.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
           icon={<DollarSign className="h-5 w-5" />}
           big
@@ -91,14 +86,14 @@ function CorpmindDashboard() {
                 t.status === "bloqueado"
                   ? { label: "Bloqueado", cls: "bg-destructive/15 text-destructive" }
                   : expired
-                    ? { label: "Vencido", cls: "bg-yellow-500/15 text-yellow-600" }
-                    : { label: "Ativo", cls: "bg-emerald-500/15 text-emerald-600" };
+                    ? { label: "Vencido", cls: "bg-warning/15 text-warning-foreground" }
+                    : { label: "Ativo", cls: "bg-success/15 text-success" };
               return (
-                <div key={t.id} className="flex items-center justify-between px-5 py-4 gap-4">
+                <div key={t.id} className="flex flex-wrap items-center justify-between px-5 py-4 gap-4">
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold truncate">{t.nome}</p>
                     <p className="text-xs text-muted-foreground">
-                      @{t.login} · expira {new Date(t.data_expiracao).toLocaleDateString("pt-BR")}
+                      @{t.login} · expira {new Date(t.data_expiracao + "T12:00:00").toLocaleDateString("pt-BR")}
                     </p>
                   </div>
                   <p className="font-display text-lg font-bold tabular-nums">

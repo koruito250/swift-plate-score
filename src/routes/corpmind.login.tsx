@@ -1,8 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { bootstrapCorpmind } from "@/lib/corpmind.functions";
 
 export const Route = createFileRoute("/corpmind/login")({
   head: () => ({ meta: [{ title: "CorpMind — Acesso" }] }),
@@ -11,18 +10,15 @@ export const Route = createFileRoute("/corpmind/login")({
 
 function CorpmindLogin() {
   const navigate = useNavigate();
-  const [login, setLogin] = useState("corpmind");
+  const [login, setLogin] = useState("corpmind@gmail.com");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    bootstrapCorpmind().catch(() => {});
-  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const email = `${login.trim().toLowerCase()}@corpmind.local`;
+    const normalized = login.trim().toLowerCase();
+    const email = normalized.includes("@") ? normalized : normalized === "corpmind" ? "corpmind@gmail.com" : `${normalized}@corpmind.local`;
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error || !data.user) return toast.error("Credenciais inválidas.");
@@ -52,12 +48,13 @@ function CorpmindLogin() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-xs uppercase tracking-wider block mb-2">Login</label>
+              <label className="text-xs uppercase tracking-wider block mb-2">E-mail do administrador</label>
               <input
                 type="text"
                 required
                 value={login}
                 onChange={(e) => setLogin(e.target.value)}
+                autoComplete="username"
                 className="w-full bg-background border border-border px-4 py-3"
               />
             </div>
@@ -68,6 +65,7 @@ function CorpmindLogin() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 className="w-full bg-background border border-border px-4 py-3"
               />
             </div>
