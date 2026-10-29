@@ -1,10 +1,11 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/corpmind/login")({
-  head: () => ({ meta: [{ title: "CorpMind — Acesso" }] }),
+  head: () => pageMeta("Acesso do administrador geral — CorpMind", "Acesso restrito à gestão geral de clientes e assinaturas CorpMind."),
   component: CorpmindLogin,
 });
 

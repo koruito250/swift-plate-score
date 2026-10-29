@@ -1,13 +1,9 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, QrCode, BarChart3, Bell } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Sakura — Avaliação inteligente para restaurantes" },
-      { name: "description", content: "QR Code na mesa, alertas em tempo real e ranking de garçons. Transforme cada cliente em insight." },
-    ],
-  }),
+  head: () => pageMeta("Sakura — Avaliação inteligente para restaurantes", "QR Code na mesa, alertas e ranking de garçons para acompanhar a experiência dos clientes."),
   component: Landing,
 });
 

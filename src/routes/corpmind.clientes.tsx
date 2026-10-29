@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
@@ -12,6 +13,7 @@ import {
 } from "@/lib/corpmind.functions";
 
 export const Route = createFileRoute("/corpmind/clientes")({
+  head: () => pageMeta("Clientes e assinaturas — CorpMind", "Cadastre e gerencie os clientes e assinaturas do sistema CorpMind."),
   component: CorpmindClientes,
 });
 

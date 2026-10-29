@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,12 +9,7 @@ import { toPng } from "html-to-image";
 import { normalizeTableSearchParam } from "@/lib/evaluation-link";
 
 export const Route = createFileRoute("/avaliar")({
-  head: () => ({
-    meta: [
-      { title: "Avalie sua experiência — Sakura" },
-      { name: "description", content: "Conte como foi sua experiência. Sua opinião molda nossa cozinha." },
-    ],
-  }),
+  head: () => pageMeta("Avalie sua experiência — Sakura", "Conte como foi sua experiência no restaurante e receba seu benefício."),
   validateSearch: (s: Record<string, unknown>) => ({
     mesa: normalizeTableSearchParam(s.mesa),
     t: typeof s.t === "string" ? s.t : "",

@@ -1,3 +1,4 @@
+import { pageMeta } from "@/lib/page-meta";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,6 +6,7 @@ import { AlertTriangle, TrendingUp, Users, Utensils } from "lucide-react";
 import { useTenant } from "@/lib/tenant-context";
 
 export const Route = createFileRoute("/admin/")({
+  head: () => pageMeta("Painel do restaurante — CorpMind", "Indicadores de satisfação, alertas e ranking da equipe do restaurante."),
   component: Dashboard,
 });
 
