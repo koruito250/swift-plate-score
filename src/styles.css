@@ -166,3 +166,11 @@
     color: var(--color-muted-foreground);
   }
 }
+
+@media print {
+  .pwa-install-launcher { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [role="dialog"], [data-state="open"] { animation: none !important; transition: none !important; }
+}
