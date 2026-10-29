@@ -60,11 +60,11 @@ function CorpmindLayout() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b-2 border-foreground">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-wrap gap-4 items-center justify-between">
           <Link to="/corpmind" className="text-2xl font-display font-bold">
             CorpMind <span className="text-primary">·</span> Master
           </Link>
-          <nav className="flex items-center gap-1">
+          <nav className="flex max-w-full flex-wrap items-center gap-1">
             {tabs.map((t) => {
               const active = path === t.to;
               return (

@@ -95,12 +95,13 @@ function QRCodes() {
           .print-area { position: absolute; inset: 0; padding: 1rem; }
           .no-print { display: none !important; }
           .print-card { break-inside: avoid; page-break-inside: avoid; }
+          .print-area { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
       `}</style>
 
       <div className="no-print">
         <p className="editorial-eyebrow mb-2">Operação</p>
-        <h1 className="text-5xl font-display font-bold">QR Codes das Mesas</h1>
+        <h1 className="text-4xl sm:text-5xl font-display font-bold">QR Codes das Mesas</h1>
         <p className="text-muted-foreground italic mt-2">
           Gere, baixe e imprima os QR Codes para colar nas mesas.
         </p>
@@ -157,7 +158,7 @@ function QRCodes() {
 
       {items.length > 0 && (
         <>
-          <div className="no-print flex items-center justify-between">
+          <div className="no-print flex flex-wrap gap-3 items-center justify-between">
             <p className="text-sm text-muted-foreground">{items.length} QR Code(s) gerado(s)</p>
             <button
               onClick={printAll}
@@ -167,7 +168,7 @@ function QRCodes() {
             </button>
           </div>
 
-          <div ref={printRef} className="print-area grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div ref={printRef} className="print-area grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {items.map((it) => (
               <div key={it.label} className="print-card border border-foreground/20 bg-card p-5 text-center">
                 <p className="font-display text-3xl font-bold mb-3">Mesa {it.label}</p>

@@ -92,7 +92,7 @@ export function PwaInstall() {
     {offline && <div role="status" className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 border-t border-border bg-background px-4 py-3 text-center text-sm text-foreground"><WifiOff className="size-4 shrink-0" />Sem conexão. Conecte-se para salvar ou consultar dados.</div>}
     {!installed && !open && <Button variant="outline" size="icon" className="pwa-install-launcher fixed bottom-5 right-5 z-40 size-11 bg-background" aria-label="Instalar CorpMind" title="Instalar CorpMind" onClick={() => { setManual(false); setOpen(true); }}><Download /></Button>}
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-h-[85dvh] w-[calc(100%-2rem)] max-w-sm gap-5 overflow-y-auto rounded-lg p-6 sm:p-7">
+      <DialogContent className="max-h-[85dvh] w-[calc(100%_-_2rem)] max-w-sm gap-5 overflow-y-auto rounded-lg p-6 sm:p-7">
         <div className="flex items-center gap-4"><img src={icon} alt="" width={64} height={64} className="size-16 shrink-0 rounded-lg" /><div><p className="text-xs font-medium uppercase text-primary">No seu dispositivo</p><DialogTitle className="mt-1 text-2xl">CorpMind</DialogTitle></div></div>
         <DialogDescription className="text-base leading-relaxed">Tenha o CorpMind na sua tela inicial, sempre a um toque de distância.</DialogDescription>
         {manual ? <div className="space-y-4 border-y border-border py-5">
