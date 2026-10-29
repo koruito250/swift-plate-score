@@ -3,6 +3,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { PasswordInput } from "@/components/PasswordInput";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin/login")({
   head: () => pageMeta("Acesso do restaurante — CorpMind", "Entre no painel exclusivo do seu restaurante com seu login e senha."),
@@ -81,11 +83,16 @@ function AdminLogin() {
         <div className="border border-border bg-card p-8">
           <p className="editorial-eyebrow mb-2">Acesso restrito</p>
           <h1 className="text-3xl font-display font-bold mb-6">Painel do cliente</h1>
+          <nav aria-label="Tipo de acesso" className="grid grid-cols-2 border-b border-border mb-6 text-sm">
+            <Link to="/admin/login" className="text-center py-3 border-b-2 border-primary font-semibold" aria-current="page">Cliente</Link>
+            <Link to="/corpmind/login" reloadDocument className="text-center py-3 text-muted-foreground">Administrador geral</Link>
+          </nav>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-xs uppercase tracking-wider block mb-2">Login</label>
+              <label htmlFor="client-login" className="text-xs uppercase tracking-wider block mb-2">Login</label>
               <input
+                id="client-login"
                 type="text"
                 required
                 value={login}
@@ -95,30 +102,21 @@ function AdminLogin() {
               />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-wider block mb-2">Senha</label>
-              <input
-                type="password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-background border border-border px-4 py-3"
-                autoComplete="current-password"
-              />
+              <label htmlFor="client-password" className="text-xs uppercase tracking-wider block mb-2">Senha</label>
+              <PasswordInput id="client-password" value={password} onChange={setPassword} />
             </div>
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-foreground text-background font-bold uppercase tracking-[0.2em] text-xs hover:bg-primary transition-colors disabled:opacity-40"
+              className="w-full h-auto rounded-none py-4 bg-foreground text-background font-bold uppercase tracking-[0.2em] text-xs hover:bg-primary transition-colors disabled:opacity-40"
             >
               {loading ? "…" : "Entrar"}
-            </button>
+            </Button>
           </form>
 
           <p className="text-xs text-muted-foreground italic mt-6 text-center">
             Use o login e senha fornecidos pela CorpMind.
           </p>
-          <Link to="/corpmind/login" className="block text-center text-sm text-primary mt-4 hover:underline">Administrador geral</Link>
         </div>
       </div>
     </div>
