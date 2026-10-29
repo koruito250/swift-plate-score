@@ -1,0 +1,16 @@
+{
+  "id": "/",
+  "name": "CorpMind — Gestão de Restaurantes",
+  "short_name": "CorpMind",
+  "description": "Avaliações e gestão para restaurantes.",
+  "lang": "pt-BR",
+  "start_url": "/admin/login",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f5ed",
+  "theme_color": "#a72a22",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
