@@ -5,3 +5,5 @@
 - Compute general administrator subscription totals with tenant-metrics so all dashboard indicators use one tested definition.
 - Use page-meta for leaf route social metadata to keep titles and descriptions consistent without duplicating tag lists.
 - Share the PasswordInput control between customer and master login so password visibility never changes credential storage or authentication behavior.
+- Keep PWA registration in one guarded wrapper, disabled in dev/previews; generate the worker through vite-plugin-pwa and never cache private HTML, API responses or QR evaluation URLs, because tenant data must not persist in offline caches.
+- Render the global installation dialog from the root shell; keep native installation browser-controlled and offer dismissible platform instructions when unavailable.

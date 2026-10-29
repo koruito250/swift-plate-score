@@ -111,14 +111,14 @@ function AdminLayout() {
             <Link to="/" className="text-2xl font-display font-bold truncate">
               {tenant.nome}
             </Link>
-            <nav className="flex items-center gap-1">
+            <nav className="flex max-w-full flex-wrap items-center gap-1">
               {tabs.map((t) => {
                 const active = path === t.to;
                 return (
                   <Link
                     key={t.to}
                     to={t.to}
-                    className={`px-4 py-2 text-xs uppercase tracking-[0.2em] font-medium transition-colors ${
+                    className={`px-2 sm:px-4 py-2 text-xs uppercase tracking-[0.2em] font-medium transition-colors ${
                       active ? "bg-foreground text-background" : "hover:text-primary"
                     }`}
                   >

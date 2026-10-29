@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
+import { PwaInstall } from "@/components/PwaInstall";
 
 import appCss from "../styles.css?url";
 
@@ -30,6 +31,11 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#a72a22" },
+      { name: "application-name", content: "CorpMind" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-title", content: "CorpMind" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
       { title: "Sakura — Avaliação de Restaurante" },
       { name: "description", content: "Sistema profissional de avaliação de clientes, ranking de garçons e dashboard em tempo real." },
       { name: "author", content: "Sakura" },
@@ -40,11 +46,12 @@ export const Route = createRootRoute({
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Sakura — Avaliação de Restaurante" },
       { name: "twitter:description", content: "Sistema profissional de avaliação de clientes, ranking de garçons e dashboard em tempo real." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cec54a47-46f1-4353-8b81-6165b27aeeba/id-preview-06ab0627--fccaebc3-d59a-4c38-8947-4c97be5b8298.lovable.app-1777559484770.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cec54a47-46f1-4353-8b81-6165b27aeeba/id-preview-06ab0627--fccaebc3-d59a-4c38-8947-4c97be5b8298.lovable.app-1777559484770.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.json" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -76,6 +83,7 @@ function RootComponent() {
   return (
     <>
       <Outlet />
+      <PwaInstall />
       <Toaster richColors position="top-center" />
     </>
   );
