@@ -3,4 +3,5 @@
 - [ ] Verificar QR completo com restaurante e mesa preenchida na avaliação.
 - [ ] Testar o fluxo autenticado e a ficha pública.
 - [ ] Ajustar acesso do administrador geral solicitado, preservando os clientes existentes.
+- [ ] Permitir a senha simples solicitada explicitamente e verificar o acesso master.
 - [ ] Verificar criar, editar, bloquear e excluir clientes; total das assinaturas e indicadores.
