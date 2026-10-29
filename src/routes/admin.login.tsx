@@ -85,7 +85,7 @@ function AdminLogin() {
           <h1 className="text-3xl font-display font-bold mb-6">Painel do cliente</h1>
           <nav aria-label="Tipo de acesso" className="grid grid-cols-2 border-b border-border mb-6 text-sm">
             <Link to="/admin/login" className="text-center py-3 border-b-2 border-primary font-semibold" aria-current="page">Cliente</Link>
-            <Link to="/corpmind/login" className="text-center py-3 text-muted-foreground">Administrador geral</Link>
+            <Link to="/corpmind/login" reloadDocument className="text-center py-3 text-muted-foreground">Administrador geral</Link>
           </nav>
 
           <form onSubmit={handleSubmit} className="space-y-4">
