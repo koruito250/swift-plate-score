@@ -1,4 +1,7 @@
 # Correções de garçons e QR
+- [ ] Adicionar instalação CorpMind, ícones e orientações por plataforma.
+- [ ] Adicionar acesso offline seguro sem armazenar dados privados ou avaliações.
+- [ ] Verificar instalação, atualização e telas em celular e tablet.
 - [x] Corrigir isolamento da equipe no painel e verificar exclusão.
 - [x] Verificar QR completo com restaurante e mesa preenchida na avaliação.
 - [x] Testar o fluxo autenticado e a ficha pública.
