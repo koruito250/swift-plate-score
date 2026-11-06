@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { LogOut } from "lucide-react";
 import { TenantContext, type TenantInfo } from "@/lib/tenant-context";
 import { toast } from "sonner";
+import { setInstallBrand } from "@/lib/install-brand";
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
@@ -83,6 +84,12 @@ function AdminLayout() {
     })();
     return () => sub.subscription.unsubscribe();
   }, [navigate, isLoginRoute]);
+
+  useEffect(() => {
+    if (isLoginRoute || !tenant) return;
+    setInstallBrand(tenant.nome);
+    return () => setInstallBrand(null);
+  }, [tenant, isLoginRoute]);
 
   if (isLoginRoute) {
     return <Outlet />;

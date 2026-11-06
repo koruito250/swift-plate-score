@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { INSTALL_DELAY_MS, installationPlatform } from "@/lib/pwa-policy";
 import { registerAppWorker } from "@/lib/pwa-registration";
 import icon from "@/assets/corpmind-icon.jpg";
+import { useInstallBrand } from "@/lib/install-brand";
 
 interface InstallEvent extends Event {
   prompt: () => Promise<void>;
@@ -20,6 +21,7 @@ export function PwaInstall() {
   const [offlineReady, setOfflineReady] = useState(false);
   const [installed, setInstalled] = useState(false);
   const pending = useRef<InstallEvent | null>(null);
+  const brand = useInstallBrand();
 
   useEffect(() => {
     const standalone = window.matchMedia("(display-mode: standalone)").matches
@@ -90,11 +92,11 @@ export function PwaInstall() {
 
   return <>
     {offline && <div role="status" className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 border-t border-border bg-background px-4 py-3 text-center text-sm text-foreground"><WifiOff className="size-4 shrink-0" />Sem conexão. Conecte-se para salvar ou consultar dados.</div>}
-    {!installed && !open && <Button variant="outline" size="icon" className="pwa-install-launcher fixed bottom-5 right-5 z-40 size-11 bg-background" aria-label="Instalar CorpMind" title="Instalar CorpMind" onClick={() => { setManual(false); setOpen(true); }}><Download /></Button>}
+    {!installed && !open && <Button variant="outline" size="icon" className="pwa-install-launcher fixed bottom-5 right-5 z-40 size-11 bg-background" aria-label={`Instalar ${brand}`} title={`Instalar ${brand}`} onClick={() => { setManual(false); setOpen(true); }}><Download /></Button>}
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-h-[85dvh] w-[calc(100%_-_2rem)] max-w-sm gap-5 overflow-y-auto rounded-lg p-6 sm:p-7">
-        <div className="flex items-center gap-4"><img src={icon} alt="" width={64} height={64} className="size-16 shrink-0 rounded-lg" /><div><p className="text-xs font-medium uppercase text-primary">No seu dispositivo</p><DialogTitle className="mt-1 text-2xl">CorpMind</DialogTitle></div></div>
-        <DialogDescription className="text-base leading-relaxed">Tenha o CorpMind na sua tela inicial, sempre a um toque de distância.</DialogDescription>
+        <div className="flex items-center gap-4"><img src={icon} alt="" width={64} height={64} className="size-16 shrink-0 rounded-lg" /><div><p className="text-xs font-medium uppercase text-primary">No seu dispositivo</p><DialogTitle className="mt-1 text-2xl break-words">{brand}</DialogTitle></div></div>
+        <DialogDescription className="text-base leading-relaxed">Tenha o {brand} na sua tela inicial, sempre a um toque de distância.</DialogDescription>
         {manual ? <div className="space-y-4 border-y border-border py-5">
           <p className="font-semibold">{platform === "ios" ? "Instalar pelo Safari" : platform === "android" ? "Instalar pelo Chrome" : "Instalar no computador"}</p>
           {platform === "ios" ? <>
@@ -106,11 +108,11 @@ export function PwaInstall() {
             <Step n="2" icon={<Download className="size-5" />} text="Toque em Instalar aplicativo ou Adicionar à tela inicial e confirme." />
           </> : <>
             <Step n="1" icon={<MonitorDown className="size-5" />} text="No Chrome ou Edge, procure o ícone de instalação à direita da barra de endereço (monitor com seta)." />
-            <Step n="2" icon={<MoreVertical className="size-5" />} text="Ou abra o menu ⋮ e procure Instalar CorpMind. No Safari do Mac, use Arquivo → Adicionar ao Dock." />
+            <Step n="2" icon={<MoreVertical className="size-5" />} text={`Ou abra o menu ⋮ e procure Instalar ${brand}. No Safari do Mac, use Arquivo → Adicionar ao Dock.`} />
           </>}
           <p className="text-xs leading-relaxed text-muted-foreground">Use o endereço publicado em uma janela do navegador, fora da prévia. Se a opção não aparecer, atualize o navegador. Alguns navegadores não oferecem instalação.</p>
         </div> : <div className="flex items-center gap-3 border-y border-border py-4 text-sm"><Smartphone className="size-5 text-primary" /><span>Seu restaurante, mais perto de você.</span></div>}
-        <Button size="lg" className="w-full" disabled={busy} onClick={() => { if (manual) setOpen(false); else void install(); }}><Download />{busy ? "Aguarde…" : manual ? "Entendi" : "Instalar CorpMind"}</Button>
+        <Button size="lg" className="w-full" disabled={busy} onClick={() => { if (manual) setOpen(false); else void install(); }}><Download />{busy ? "Aguarde…" : manual ? "Entendi" : `Instalar ${brand}`}</Button>
         {!manual && <Button variant="ghost" className="w-full" onClick={() => setOpen(false)}>Agora não</Button>}
         {offlineReady && <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground"><RefreshCw className="size-3" />Atualizações automáticas ativadas</p>}
       </DialogContent>
