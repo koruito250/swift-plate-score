@@ -9,7 +9,7 @@ import { toPng } from "html-to-image";
 import { normalizeTableSearchParam } from "@/lib/evaluation-link";
 
 export const Route = createFileRoute("/avaliar")({
-  head: () => pageMeta("Avalie sua experiência — Sakura", "Conte como foi sua experiência no restaurante e receba seu benefício."),
+  head: () => pageMeta("Avalie sua experiência", "Conte como foi sua experiência no restaurante e receba seu benefício."),
   validateSearch: (s: Record<string, unknown>) => ({
     mesa: normalizeTableSearchParam(s.mesa),
     t: typeof s.t === "string" ? s.t : "",
@@ -31,6 +31,7 @@ const FIELDS = [
 function Avaliar() {
   const { mesa, t: tenantId } = Route.useSearch();
   const [waiters, setWaiters] = useState<Waiter[]>([]);
+  const [tenantName, setTenantName] = useState("");
   const [waiterId, setWaiterId] = useState<string>("");
   const [tableNumber, setTableNumber] = useState(mesa);
   const [comment, setComment] = useState("");
@@ -53,7 +54,7 @@ function Avaliar() {
         backgroundColor: "#ffffff",
       });
       const link = document.createElement("a");
-      link.download = `cupom-sakura-${Date.now()}.png`;
+      link.download = `cupom-${(tenantName || "restaurante").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}.png`;
       link.href = dataUrl;
       link.click();
       toast.success("Cupom salvo!");
@@ -75,6 +76,14 @@ function Avaliar() {
           if (error) { toast.error("Não foi possível carregar os garçons. Tente novamente."); return; }
           setWaiters((data ?? []) as Waiter[]);
         });
+      supabase.rpc("tenant_public_name", { p_tenant_id: tenantId }).then(({ data }) => {
+        if (cancelled) return;
+        const nome = typeof data === "string" ? data : "";
+        setTenantName(nome);
+        if (nome) document.title = `Avalie sua experiência — ${nome}`;
+      });
+    } else {
+      setTenantName("");
     }
     setNow(new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }));
     return () => { cancelled = true; };
@@ -191,7 +200,7 @@ function Avaliar() {
         <div className="editorial-rule pb-4 mb-8 flex justify-between items-end">
           <div>
             <p className="editorial-eyebrow">Avaliação</p>
-            <Link to="/" className="text-2xl font-display font-bold">鮨 Sakura</Link>
+            <Link to="/" className="text-2xl font-display font-bold">{tenantName || "Avaliação"}</Link>
           </div>
           <p className="text-xs text-muted-foreground">
             {tableNumber ? `Mesa ${tableNumber}` : "Mesa —"}{now ? ` · ${now}` : ""}

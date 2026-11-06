@@ -195,6 +195,7 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { _uid: string }; Returns: boolean }
+      tenant_public_name: { Args: { p_tenant_id: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "user"
