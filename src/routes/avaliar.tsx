@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Check, Download } from "lucide-react";
 import { toPng } from "html-to-image";
 import { normalizeTableSearchParam } from "@/lib/evaluation-link";
+import { setInstallBrand } from "@/lib/install-brand";
 
 export const Route = createFileRoute("/avaliar")({
   head: () => pageMeta("Avalie sua experiência", "Conte como foi sua experiência no restaurante e receba seu benefício."),
@@ -89,6 +90,11 @@ function Avaliar() {
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mesa, tenantId]);
+
+  useEffect(() => {
+    setInstallBrand(tenantName || null);
+    return () => setInstallBrand(null);
+  }, [tenantName]);
 
   const setRating = (key: string, v: number) => setRatings((r) => ({ ...r, [key]: v }));
 
