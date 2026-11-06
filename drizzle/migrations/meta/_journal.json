@@ -15,6 +15,13 @@
       "when": 1792200681084,
       "tag": "0001_scope_public_waiter_reads_to_guests",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793931520076,
+      "tag": "0002_tenant_public_name",
+      "breakpoints": true
     }
   ]
 }
