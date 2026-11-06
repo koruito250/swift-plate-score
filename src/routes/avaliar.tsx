@@ -54,7 +54,7 @@ function Avaliar() {
         backgroundColor: "#ffffff",
       });
       const link = document.createElement("a");
-      link.download = `cupom-sakura-${Date.now()}.png`;
+      link.download = `cupom-${(tenantName || "restaurante").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}.png`;
       link.href = dataUrl;
       link.click();
       toast.success("Cupom salvo!");
